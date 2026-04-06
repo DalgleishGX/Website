@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DalgleishGX | Portfolio</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #111111;
+            --text-main: #ffffff;
+            --text-muted: #999999;
+            --accent-blue: #3b82f6;
+            --banner-url: url('https://pbs.twimg.com/profile_banners/1690521306796564481/1753236331/1500x500');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1; /* Pushes footer to bottom if content is short */
+        }
+
+        /* Profile Card with Gradient Fade */
+        .profile-card {
+            background-color: var(--card-bg);
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid #222;
+            position: relative;
+        }
+
+        .banner-area {
+            height: 260px;
+            background-image: var(--banner-url);
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .banner-area::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(to bottom, rgba(17, 17, 17, 0) 0%, var(--card-bg) 100%);
+        }
+
+        .profile-info {
+            padding: 0px 40px 40px 40px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            position: relative;
+            z-index: 2;
+            margin-top: -40px;
+        }
+
+        .pfp-container {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-blue);
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .pfp-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-text h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .header-text p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        /* Content Cards */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 32px;
+            padding: 40px;
+            border: 1px solid #222;
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        /* Social Buttons */
+        .social-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .social-btn {
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 14px 0;
+            border-radius: 14px;
+            font-weight: 600;
+            text-align: center;
+            flex: 1;
+            min-width: 140px;
+            transition: all 0.2s ease;
+        }
+
+        .social-btn:hover {
+            background-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        /* The Footer */
+        footer {
+            margin-top: 40px;
+            padding-bottom: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 650px) {
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
+                margin-top: -50px;
+            }
+            .banner-area {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="profile-card">
+            <div class="banner-area"></div>
+            <div class="profile-info">
+                <div class="pfp-container">
+                    <img src="https://pbs.twimg.com/profile_images/1947840465518170112/oBBoMeCT_400x400.jpg" alt="DalgleishGX">
+                </div>
+                <div class="header-text">
+                    <h1>DalgleishGX</h1>
+                    <p>"So, technology, huh"</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="card">
+            <h2>About Me</h2>
+            <p>
+                Hello, my name is Jason and I go by the online alias DalgleishGX. 
+                As a technology enthusiast, I’m always excited about anything new within the space.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>My Socials</h2>
+            <p>I'm on many socials, here's a quick summary. I'm most active on Twitter, Threads, and Discord.</p>
+            <div class="social-grid">
+                <a href="#" class="social-btn">Twitter</a>
+                <a href="#" class="social-btn">Threads</a>
+                <a href="#" class="social-btn">Reddit</a>
+                <a href="#" class="social-btn">Github</a>
+                <a href="#" class="social-btn">Discord</a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        Designed by <strong>DalgleishGX</strong> &bull; Coded by <strong>AI</strong>
+    </footer>
+
+</body>
+</html>
