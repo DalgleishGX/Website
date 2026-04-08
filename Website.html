@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-deep: #05050a;
@@ -21,14 +22,132 @@
             --text-muted: rgba(255, 255, 255, 0.5);
             --banner-url: url('https://pbs.twimg.com/profile_banners/1690521306796564481/1753236331/1500x500');
             --star-svg: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M50 80C50 88 49 90 45 90C49 90 50 92 50 100C50 92 51 90 55 90C51 90 50 88 50 80Z'/%3E%3C/svg%3E");
+            --star-svg-sm: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M50 88C50 92 49.5 93 48 93C49.5 93 50 94 50 98C50 94 50.5 93 52 93C50.5 93 50 92 50 88Z'/%3E%3C/svg%3E");
+        }
+        
+        /* --- GLASS ASSET POPUP --- */
+        /* --- GLASS ASSET POPUP (REFINED) --- */
+/* --- UPDATED ASSET POPUP --- */
+/* --- REFINED GLASS ASSET POPUP --- */
+/* --- ENLARGED VIEW (POPUP) STYLES --- */
+/* --- ASSET PREVIEW MODAL --- */
+        .asset-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.2); 
+            backdrop-filter: blur(4px); 
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            /* 1. Ensure the background has some transparency so the blur is visible */
+            background: rgba(5, 5, 10, 0.5); 
+
+            /* 2. This is the magic line for the window itself to blur what's behind it */
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+            /* 3. Force it to sit above everything else */
+            z-index: 9999; 
         }
 
+        .asset-modal.active { display: flex; }
+
+        .modal-glass-content {
+            position: relative;
+            width: 90vw; 
+            max-width: 2000px; /* Fixed: Added 'px' units */
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(45px); 
+            -webkit-backdrop-filter: blur(45px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px; 
+            padding: 40px; 
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-square-title {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .modal-action-square, .modal-close-square {
+            background: rgba(255, 255, 255, 0.1);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .modal-action-square:hover { background: rgba(26, 115, 232, 0.3); }
+        .modal-close-square:hover { background: rgba(255, 0, 0, 0.2); }
+
+        #enlargedAsset {
+            width: 100%;
+            height: auto;
+            max-height: 65vh;
+            object-fit: contain;
+            background: transparent;
+            border-radius: 12px;
+        }
         /* --- SETTINGS SYSTEM --- */
         body.disable-animations * { animation: none !important; transition: none !important; }
-        body.disable-animations .logo-track { display: grid !important; grid-template-columns: repeat(5, 1fr); gap: 20px; width: 100%; animation: none !important; }
-        body.disable-animations .carousel-wrapper { -webkit-mask-image: none !important; overflow: visible; }
+        
+        /* Fix duplication and layout for static mode */
+        body.disable-animations .logo-track { 
+            display: flex !important; 
+            flex-wrap: wrap !important; /* Allows logos to stack vertically */
+            justify-content: center !important;
+            gap: 30px !important; 
+            width: 100% !important; 
+            height: auto !important; /* Essential to prevent clipping */
+            animation: none !important; 
+            transform: none !important;
+            padding: 20px 0 !important;
+        }
+
+        body.disable-animations .carousel-wrapper { 
+            -webkit-mask-image: none !important; 
+            height: auto !important; /* Allow wrapper to expand with content */
+            overflow: visible !important; 
+        }
+        body.disable-animations .logo-item img {
+            transform: none !important;
+            filter: brightness(0) invert(1) drop-shadow(0 0 0 transparent) !important;
+            opacity: 0.6;
+            color: var(--accent-color); /* Fallback for some browsers */
+        }
+        body.disable-animations .logo-track .logo-item.duplicate { display: none !important; }
+        
         body.disable-animations .floating-window:hover, 
         body.disable-animations .portal-card:hover { transform: none !important; }
+        body.disable-animations .discord-notice:hover { transform: none !important; }
         body.disable-animations::before, body.disable-animations::after { animation: none !important; }
 
         body.disable-glass .glass-card, 
@@ -40,6 +159,28 @@
             backdrop-filter: none !important; -webkit-backdrop-filter: none !important; 
             background: #121217 !important; border-color: rgba(255,255,255,0.1) !important;
         }
+        body.disable-glass .asset-modal {
+            backdrop-filter: blur(4px) !important;
+            -webkit-backdrop-filter: blur(4px) !important;
+            background: rgba(0, 0, 0, 0.4) !important; /* Slightly darker to make the solid box pop */
+        }
+        body.disable-glass .modal-glass-content {  /* ADDED THIS */
+            backdrop-filter: none !important; 
+            -webkit-backdrop-filter: none !important; 
+            background: #121217 !important; 
+            border-color: rgba(255,255,255,0.1) !important;
+        }
+        /* Tinted Glass */
+        body.tinted-glass .glass-card,
+        body.tinted-glass .sidebar,
+        body.tinted-glass .floating-window,
+        body.tinted-glass .settings-btn-container,
+        body.tinted-glass .portal-card,
+        body.tinted-glass .setting-card,
+        body.tinted-glass .modal-glass-content {
+            background: color-mix(in srgb, var(--accent-color) 6%, rgba(255,255,255,0.03)) !important;
+            border-color: color-mix(in srgb, var(--accent-color) 20%, rgba(255,255,255,0.08)) !important;
+        }
 
         body.perf-mode { background-image: none !important; background-color: #000 !important; }
         body.perf-mode::before, body.perf-mode::after { display: none !important; }
@@ -47,6 +188,8 @@
         body.hide-labels .nav-icon span { display: none !important; }
         
         .setting-card.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
+
+
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Figtree', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
 
@@ -70,6 +213,90 @@
 
         @keyframes twinkle-one { 0% { transform: translate(0, 0); opacity: 0.1; } 50% { opacity: 0.3; } 100% { transform: translate(2%, 1%); opacity: 0.15; } }
         @keyframes twinkle-two { 0% { transform: translate(0, 0); opacity: 0.05; } 50% { opacity: 0.25; } 100% { transform: translate(-1%, 2%); opacity: 0.05; } }
+
+        /* Hide CSS stars when enhanced space bg or circuit bg is on */
+        body.space-bg::before, body.space-bg::after,
+        body.circuit-bg::before, body.circuit-bg::after { display: none; }
+
+
+
+        /* Circuit bg: accent-tinted gradient (colours driven by JS via --circuit-grad-a/b) */
+        body.circuit-bg {
+            background-image:
+                radial-gradient(at 15% 20%, var(--circuit-grad-a, rgba(26,115,232,0.30)) 0px, transparent 55%),
+                radial-gradient(at 85% 80%, var(--circuit-grad-b, rgba(26,115,232,0.18)) 0px, transparent 55%),
+                radial-gradient(at 50% 50%, var(--circuit-grad-c, rgba(26,115,232,0.08)) 0px, transparent 70%) !important;
+        }
+        /* === CIRCUIT BOARD BACKGROUND === */
+        #circuit-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none; display: none; opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+        body.circuit-bg #circuit-canvas { display: block; }
+        body.circuit-bg.circuit-canvas-visible #circuit-canvas { opacity: 1; }
+        body.disable-animations #circuit-canvas { display: none !important; }
+
+        /* === ENHANCED SPACE BACKGROUND === */
+        #space-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none; display: none;
+        }
+        body.space-bg #space-canvas { display: block; }
+
+        /* Nebula blobs */
+        .nebula {
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+            filter: blur(80px); animation: nebula-drift 25s ease-in-out infinite alternate;
+        }
+        .nebula-1 { width: 600px; height: 400px; top: -10%; left: -15%; background: radial-gradient(ellipse, rgba(106,36,227,0.18) 0%, transparent 70%); animation-duration: 30s; }
+        .nebula-2 { width: 500px; height: 500px; top: 20%; right: -10%; background: radial-gradient(ellipse, rgba(26,115,232,0.15) 0%, transparent 70%); animation-duration: 22s; animation-delay: -8s; }
+        .nebula-3 { width: 700px; height: 350px; bottom: 0%; left: 20%; background: radial-gradient(ellipse, rgba(80,20,180,0.12) 0%, transparent 70%); animation-duration: 35s; animation-delay: -15s; }
+        .nebula-4 { width: 400px; height: 400px; top: 50%; right: 20%; background: radial-gradient(ellipse, rgba(0,180,255,0.08) 0%, transparent 70%); animation-duration: 28s; animation-delay: -5s; }
+
+        @keyframes nebula-drift {
+            0%   { transform: translate(0,   0)   scale(1);    opacity: 1; }
+            33%  { transform: translate(3%,  2%)  scale(1.05); opacity: 0.8; }
+            66%  { transform: translate(-2%, 4%)  scale(0.97); opacity: 1; }
+            100% { transform: translate(2%, -3%)  scale(1.03); opacity: 0.85; }
+        }
+
+        /* Aurora band */
+        .aurora {
+            position: fixed; left: -20%; width: 140%; height: 220px;
+            pointer-events: none; z-index: 0; opacity: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(80,36,227,0.07) 30%, rgba(26,115,232,0.1) 55%, rgba(0,200,180,0.06) 75%, transparent 100%);
+            filter: blur(30px);
+            animation: aurora-wave 18s ease-in-out infinite;
+        }
+        .aurora-1 { top: 15%; animation-delay: 0s; }
+        .aurora-2 { top: 55%; animation-delay: -9s; animation-duration: 24s; }
+
+        @keyframes aurora-wave {
+            0%   { opacity: 0;    transform: translateX(-5%) skewX(-3deg); }
+            20%  { opacity: 1; }
+            50%  { opacity: 0.6;  transform: translateX(3%)  skewX(2deg); }
+            80%  { opacity: 0.9; }
+            100% { opacity: 0;    transform: translateX(-3%) skewX(-2deg); }
+        }
+
+        /* Hide nebula/aurora/canvas when in plain mode */
+        body:not(.space-bg) .nebula,
+        body:not(.space-bg) .aurora,
+        body:not(.space-bg) .shooting-star { display: none; }
+
+        /* Disable animations handles space elements too */
+        body.disable-animations .nebula,
+        body.disable-animations .aurora,
+        body.disable-animations #space-canvas { animation: none !important; }
+
+        /* Reduce motion: hide animated canvas + nebula/aurora, keep gradient */
+        body.disable-animations.space-bg #space-canvas { display: none !important; }
+        body.disable-animations.space-bg .nebula,
+        body.disable-animations.space-bg .aurora { display: none !important; }
+        /* Restore the CSS pseudo-element gradient (static, no animation) */
+        body.disable-animations.space-bg::before,
+        body.disable-animations.space-bg::after { display: block; animation: none !important; opacity: 0.08; }
 
         .sidebar-container {
             position: fixed; left: 30px; top: 50%; transform: translateY(-50%);
@@ -146,10 +373,10 @@
             text-decoration: none; transition: 0.2s; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
             display: flex; align-items: center; gap: 6px;
         }
-        .btn-view { background: rgba(255,255,255,0.05); color: #fff; }
-        .btn-view:hover { background: rgba(255,255,255,0.12); color: var(--accent-color); border-color: var(--accent-color); }
-        .btn-figma { background: #fff; color: #000; }
-        .btn-figma:hover { background: var(--accent-color); color: #fff; }
+        .btn-view { background: var(--accent-color); color: #fff; }
+        .btn-view:hover { background: rgba(255,255,255,0.12); color: var(--accent-color); }
+        .btn-figma { background: var(--accent-color); color: #ffffff; }
+        .btn-figma:hover { background: rgba(255,255,255,0.12); color: var(--accent-color); }
 
         .concept-preview {
             width: 100%; height: 260px; position: relative;
@@ -170,34 +397,74 @@
         .pfp-container { width: 130px; height: 130px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.15); overflow: hidden; flex-shrink: 0; background: #000; }
         .pfp-container img { width: 100%; height: 100%; object-fit: cover; }
         .header-text h1 { font-size: 2.6rem; font-weight: 600; letter-spacing: -1.2px; }
-        .header-text p { color: var(--text-muted); font-size: 1.1rem; font-style: italic; }
+        .header-text p {
+            /* Mixes the accent color with transparency at a 50% weight */
+            color: color-mix(in srgb, var(--accent-color), transparent 0%);
+            
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-top: 8px;
+            line-height: 1.2;
+            
+            /* Optional: subtle glow adjusted for the lower opacity */
+            text-shadow: 0 0 10px color-mix(in srgb, var(--accent-color), transparent 80%);
+            
+            transition: color 0.3s ease;
+        }
 
         .carousel-wrapper {
-            position: relative; width: 100%; overflow: hidden; padding: 10px 0;
+            overflow: hidden;
+            padding: 20px 0;
+            width: 100%;
+            max-width: 100vw;
+            box-sizing: border-box;
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
         }
+
         .logo-track { 
-            display: flex; align-items: center; width: max-content; gap: 60px; 
+            display: flex; 
+            align-items: center; 
+            width: max-content; 
+            gap: 30px; 
             animation: scroll 40s linear infinite;
             will-change: transform;
         }
-        .logo-track img { height: 35px; filter: grayscale(1) brightness(2) opacity(0.6); flex-shrink: 0; }
-        .logo-track img { 
-            height: 35px; 
+
+        /* Container for the logo */
+        .logo-item {
+            width: 120px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
-            /* This makes them white first, then semi-transparent */
-            filter: brightness(0) invert(1);
-            opacity: 0.5;
-            transition: filter 0.3s ease, opacity 0.3s ease;
+            margin: 0 20px;
+            /* We use overflow hidden to "clip" the shadow so it stays on the logo */
+            overflow: hidden; 
         }
 
-        /* This uses the drop-shadow hack to "tint" the image with the accent color */
-        .logo-track img:hover {
+        .logo-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            
+            /* 1. Turn logo black 2. Invert to white 3. Project accent color shadow */
+            /* Then we move the image slightly so only the shadow is visible */
+            filter: brightness(0) invert(1) drop-shadow(120px 0 0 var(--accent-color));
+            transform: translateX(-120px);
+            
             opacity: 1;
-            /* Create a sharp drop shadow of the accent color and hide the original white image */
-            filter: drop-shadow(0px 0px 0px var(--accent-color)) brightness(1);
+            transition: all 0.3s ease;
         }
-        @keyframes scroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+
+        .logo-item:hover img {
+            opacity: 1;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
 
         .card-body { padding: 45px; }
         h2 { font-size: 1.6rem; margin-bottom: 20px; font-weight: 600; }
@@ -230,16 +497,60 @@
         .section-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); font-weight: 700; margin-bottom: -15px; margin-left: 10px; }
         .kit-banner { flex-direction: row; text-align: left; gap: 40px; padding: 50px 60px; background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%); display: flex; align-items: center; }
         .kit-img { width: 160px; height: 160px; border-radius: 28px; object-fit: cover; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
-        .figma-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; padding: 14px 28px; background: #fff; color: #000; border-radius: 14px; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: 0.3s; }
-        .figma-btn:hover { background: var(--accent-color); color: white; }
+        .figma-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; padding: 14px 28px; background: var(--accent-color); color: #ffffff; border-radius: 14px; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: 0.3s; }
+        .figma-btn:hover { background: rgba(255,255,255,0.12); color: var(--accent-color); border-color: var(--accent-color); }
         
-        .discord-notice { display: flex; flex-direction: row; gap: 20px; padding: 22px 30px; border-radius: 28px; border-color: rgba(88, 101, 242, 0.3); background: rgba(88, 101, 242, 0.1); justify-content: center; align-items: center; text-decoration: none; color: white; }
-        .discord-notice:hover { border-color: var(--accent-color); }
+        .discord-notice { 
+            display: flex; 
+            flex-direction: row; 
+            gap: 20px; 
+            padding: 22px 30px; 
+            border-radius: 28px; 
+            border: 1px solid var(--accent-color); /* Added '1px solid' so the border actually shows */
+            
+            /* This creates a 10% opacity version of your accent color */
+            background: color-mix(in srgb, var(--accent-color), transparent 75%); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            justify-content: center; 
+            align-items: center; 
+            text-decoration: none; 
+            color: white; 
+        }
+        .discord-notice:hover { transform: translateY(-5px); background: color-mix(in srgb, var(--accent-color), transparent 50%)}
 
         .portal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
         .portal-card { text-decoration: none; color: white; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 45px 30px; }
         .portal-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.07); color: var(--accent-color); }
-        .portal-icon { width: 40px; height: 40px; }
+        
+        /* 1. Base state: Muted/Gray */
+        .portal-card .portal-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--text-muted); /* The color of the icon in its "off" state */
+            
+            /* This uses the icon as a stencil */
+            -webkit-mask-image: var(--icon-url);
+            mask-image: var(--icon-url);
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+            opacity: 0.6;
+        }
+
+        /* 2. Highlight state: Turn it the exact Accent Color */
+        .portal-card:hover .portal-icon {
+            opacity: 1;
+            background-color: var(--accent-color); /* No glow, just a clean color swap */
+        }
+
+        /* 3. Highlight the text too */
+        .portal-card:hover h3 {
+            color: var(--accent-color);
+        }
 
         /* --- PREVIOUS TECH DROPDOWN --- */
         .dropdown-container { cursor: pointer; transition: all 0.3s ease; }
@@ -248,6 +559,12 @@
         .dropdown-container.open .dropdown-icon { transform: rotate(180deg); }
         .dropdown-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(0, 0, 0, 0.2); }
         .dropdown-container.open .dropdown-content { max-height: 800px; }
+
+        .experiment-list { display: flex; flex-direction: column; }
+        .experiment-item { display: flex; align-items: center; justify-content: space-between; padding: 20px 28px; border-bottom: 1px solid var(--glass-border); }
+        .experiment-item:last-child { border-bottom: none; }
+        .experiment-item:last-child { border-bottom: none; }
+        .experiment-item.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
         .prev-tech-list { list-style: none; padding: 0 28px 28px 28px; display: flex; flex-direction: column; gap: 12px; }
         .prev-tech-item { font-size: 0.95rem; color: var(--text-muted); padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; gap: 14px; }
         .prev-tech-item svg { width: 18px; height: 18px; opacity: 0.7; color: var(--accent-color); }
@@ -266,6 +583,181 @@
         }
         .color-swatch.selected { border-color: white; transform: scale(1.1); }
         .color-swatch[style*="#ffffff"] { border: 1px solid rgba(255,255,255,0.3); }
+
+
+        /* === BACKDROP PICKER === */
+        .backdrop-picker {
+            position: relative;
+            margin-left: 20px;
+        }
+        .backdrop-trigger {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 14px 8px 10px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            user-select: none;
+            min-width: 170px;
+        }
+        .backdrop-trigger:hover { background: rgba(255,255,255,0.1); }
+        .backdrop-preview-thumb {
+            width: 38px; height: 26px; border-radius: 6px;
+            overflow: hidden; flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .backdrop-preview-thumb canvas { width: 100%; height: 100%; display: block; }
+        .backdrop-trigger-label { font-size: 0.82rem; font-weight: 600; color: var(--text-main); flex: 1; }
+        .backdrop-trigger-chevron { opacity: 0.5; transition: transform 0.2s; flex-shrink: 0; }
+        .backdrop-trigger-chevron.rotated { transform: rotate(180deg); }
+        .backdrop-trigger.active-border { border-color: var(--accent-color); }
+
+        .backdrop-dropdown {
+            position: fixed;
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px) saturate(180%); -webkit-backdrop-filter: blur(35px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 10px;
+            display: flex; flex-direction: column; gap: 8px;
+            min-width: 210px;
+            z-index: 9000;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            opacity: 0; pointer-events: none;
+            transform: translateY(-6px);
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+        .backdrop-dropdown.open {
+            opacity: 1; pointer-events: all; transform: translateY(0);
+        }
+        .backdrop-option {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border: 1px solid transparent;
+        }
+        .backdrop-option:hover { background: rgba(255,255,255,0.06); }
+        .backdrop-option.selected {
+            background: color-mix(in srgb, var(--accent-color) 12%, transparent);
+            border-color: color-mix(in srgb, var(--accent-color) 40%, transparent);
+        }
+        .backdrop-option-thumb {
+            width: 54px; height: 36px; border-radius: 8px;
+            overflow: hidden; flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        .backdrop-option-thumb canvas { width: 100%; height: 100%; display: block; }
+        .backdrop-option-info { display: flex; flex-direction: column; gap: 2px; }
+        .backdrop-option-name { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        .backdrop-option-desc { font-size: 0.72rem; color: var(--text-muted); }
+        .backdrop-option-check {
+            margin-left: auto; color: var(--accent-color);
+            opacity: 0; transition: opacity 0.15s;
+        }
+        .backdrop-option.selected .backdrop-option-check { opacity: 1; }
+
+        /* === POSTS PAGE === */
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .post-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            width: 100%;
+        }
+        .post-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 22px 45px rgba(0,0,0,0.35);
+            border-color: color-mix(in srgb, var(--accent-color) 30%, var(--glass-border));
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .post-avatar {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--glass-border);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .post-author {
+            display: flex; flex-direction: column; gap: 2px; flex: 1;
+        }
+        .post-author-name {
+            font-size: 0.92rem; font-weight: 700; color: var(--text-main);
+        }
+        .post-author-handle {
+            font-size: 0.78rem; color: var(--text-muted);
+        }
+        .post-date {
+            font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;
+        }
+        .post-text {
+            font-size: 0.95rem; line-height: 1.65;
+            color: rgba(255,255,255,0.88);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .post-text a { color: var(--accent-color); text-decoration: none; }
+        .post-text a:hover { text-decoration: underline; }
+        .post-images {
+            display: grid;
+            gap: 8px;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .post-images.count-1 { grid-template-columns: 1fr; }
+        .post-images.count-2 { grid-template-columns: 1fr 1fr; }
+        .post-images.count-3 { grid-template-columns: 1fr 1fr; }
+        .post-images.count-3 .post-img:first-child { grid-column: 1 / -1; }
+        .post-images.count-4 { grid-template-columns: 1fr 1fr; }
+        .post-img {
+            width: 100%; aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .post-img:hover { opacity: 0.88; }
+        .post-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-top: 4px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .post-open-btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: var(--text-muted);
+            font-size: 0.78rem; font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            font-family: inherit;
+        }
+        .post-open-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-main);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .post-open-btn svg { opacity: 0.7; }
 
         footer { margin-top: 80px; padding-bottom: 40px; text-align: center; color: var(--text-muted); font-size: 0.8rem; opacity: 0.5; }
 
@@ -292,7 +784,41 @@
             .driver-grid, .laptop-grid { grid-template-columns: 1fr; }
             .kit-banner { flex-direction: column; text-align: center; }
             .driver-name { white-space: normal; }
+            .toast-banner {
+                bottom: 110px !important; /* Positions above nav bar */
+                width: 92%;               /* Takes up most of the screen width */
+                max-width: none;          /* Removes desktop width limits */
+                padding: 8px 12px;        /* Tightens internal vertical/horizontal space */
+                min-width: unset;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;                 /* Shrinks gap between icon and text */
+            }
 
+            .toast-left {
+                gap: 8px;                 /* Tighter gap between Discord icon and text */
+                overflow: hidden;         /* Precents overflow */
+            }
+
+            .toast-icon {
+                font-size: 18px;          /* Scales down icon slightly to save space */
+            }
+
+            .toast-title {
+                font-size: 13px;          /* Smaller text size to fit on one line */
+                white-space: nowrap;      /* FORCES text to stay on one line */
+                overflow: hidden;
+                text-overflow: ellipsis;  /* Adds '...' if it absolutely cannot fit */
+            }
+
+            .toast-close {
+                width: 30px;              /* Slightly smaller X button */
+                height: 30px;
+                margin-left: 5px;
+                flex-shrink: 0;           /* Prevents the X from being squished */
+            }
+            .btn-view { display: none !important; }
             .setting-card { flex-direction: column; align-items: flex-start; gap: 20px; }
             .color-options { 
                 grid-template-columns: repeat(6, 1fr); 
@@ -305,24 +831,143 @@
 
             #sound-card-ui { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
 
+            /* Mobile Reduced Animations Grid Fix */
             body.disable-animations .logo-track {
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr) !important;
                 justify-items: center;
-                gap: 25px;
+                gap: 20px;
                 width: 100% !important;
                 padding: 10px 0;
                 justify-content: center !important;
                 margin: 0 auto !important;
-                left: 0 !important;
-                transform: none !important;
             }
-            body.disable-animations .logo-track img:nth-child(10) { display: none !important; }
-            body.disable-animations .carousel-wrapper { -webkit-mask-image: none !important; display: flex; justify-content: center; }
+            
+            /* Smaller logos for mobile grid */
+            body.disable-animations .logo-item {
+                width: 60px !important;
+                height: 15px !important;
+            }
+
+            /* Drop 10th item (Business Standard) and all duplicates on mobile static view */
+            body.disable-animations .logo-track .logo-item:nth-child(n+10) { display: none !important; }
+            
+            body.disable-animations .carousel-wrapper { 
+                -webkit-mask-image: none !important; 
+                display: flex; 
+                justify-content: center;
+                overflow: hidden; /* Ensure no overflow out of container */
+                width: 100%;
+            }
+            .logo-item img {
+                    /* This cancels the "move 120px to the left" */
+                    transform: none !important;
+                    
+                    /* This removes the brightness/invert/drop-shadow filter */
+                    filter: none !important;
+                    
+                    /* Ensures the icon is centered and visible */
+                    opacity: 0.7; /* Optional: makes them slightly muted so they aren't distracting */
+                    max-width: 100%;
+                    height: auto;
+            }
+        
         }
+
+                /* --- TOAST BANNER --- */
+        /* --- UPDATED SOLID TOAST BANNER --- */
+        /* --- UPDATED NARROW PILL TOAST --- */
+        .toast-banner {
+                    position: fixed;
+                    bottom: 30px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    z-index: 10000;
+                    width: auto;
+                    min-width: 300px;
+                    max-width: 360px;
+                    background: var(--accent-color);
+                    border-radius: 100px; /* Increased for taller look */
+                    padding: 10px 10px 10px 15px; /* Taller padding, right side matches button spacing */
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+                    cursor: pointer;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
+                .toast-left {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px; /* Slightly more gap for the larger icon */
+                }
+
+                .toast-icon {
+                    font-size: 25px; /* Significantly larger Discord icon */
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .toast-text {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .toast-title {
+                    font-weight: 800;
+                    font-size: 16px;
+                    color: #fff;
+                    line-height: 1.2;
+                }
+
+                .toast-close {
+                    background: rgba(0, 0, 0, 0.15);
+                    border: none;
+                    color: #fff;
+                    /* Large X Button with even padding */
+                    width: 36px; 
+                    height: 36px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    margin-left: 20px;
+                    transition: 0.2s;
+                    flex-shrink: 0;
+                    font-size: 16px; /* Larger X icon */
+                }
+
+                .toast-close:hover {
+                    background: rgba(0, 0, 0, 0.3);
+                    transform: scale(1.05);
+                }
+
+                .toast-hidden {
+                    opacity: 0;
+                    transform: translate(-50%, 40px) scale(0.9);
+                    pointer-events: none;
+                }
+
+                body.disable-animations .toast-banner {
+                    transition: none !important;
+                    animation: none !important;
+                }
     </style>
 </head>
 <body>
+
+    <!-- Space background elements -->
+    <canvas id="space-canvas"></canvas>
+    <canvas id="circuit-canvas"></canvas>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="nebula nebula-4"></div>
+    <div class="aurora aurora-1"></div>
+    <div class="aurora aurora-2"></div>
 
     <audio id="sound-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
     <audio id="sound-switch" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
@@ -349,6 +994,10 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                 <span>Links</span>
             </div>
+            <div class="nav-icon" id="posts-nav" onclick="showPage('posts', this)" style="display:none">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>Posts</span>
+            </div>
         </nav>
         <div class="settings-btn-container" onclick="showPage('settings', this)">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -366,24 +1015,35 @@
                 </div>
             </div>
         </header>
+        <span class="section-label">About</span>
         <section class="glass-card card-body">
-            <h2>About Me</h2>
             <p>Hello, my name is Jason and I go by the online alias DalgleishGX. As a technology enthusiast, I’m always excited about anything new within the space.</p>
         </section>
+        <span class="section-label">Mentioned by</span>
         <section class="glass-card card-body">
-            <h2>Featured In</h2>
             <div class="carousel-wrapper">
                 <div class="logo-track">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/SammyGuru.png?raw=true" alt="SammyGuru">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/AndroidHeadlines.png?raw=true" alt="Android Headlines">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/9To5Google.png?raw=true" alt="9To5Google">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/AndroidAuthority.png?raw=true" alt="Android Authority">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/AndroidPolice.png?raw=true" alt="Android Police">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/Sammobile.png?raw=true" alt="Sammobile">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/TechRadar.png?raw=true" alt="TechRadar">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/AndroidCentral.png?raw=true" alt="Android Central">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/CNET.png?raw=true" alt="CNET France">
-                    <img src="https://github.com/DalgleishGX/Website/blob/main/BusinessStandard.png?raw=true" alt="Business Standard">
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/SammyGuru.svg?raw=true" alt="SammyGuru"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/AndroidHeadlines.svg?raw=true" alt="Android Headlines"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/9to5Google.svg?raw=true" alt="9To5Google"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/AndroidAuthority.svg?raw=true" alt="Android Authority"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/AndroidPolice.svg?raw=true" alt="Android Police"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/Sammobile.svg?raw=true" alt="Sammobile"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/Techradar.svg?raw=true" alt="TechRadar"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/AndroidCentral.svg?raw=true" alt="Android Central"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/CNET.svg?raw=true" alt="CNET France"></div>
+                    <div class="logo-item"><img src="https://github.com/DalgleishGX/Website/blob/main/BusinessStandard.svg?raw=true" alt="Business Standard"></div>
+                    
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/SammyGuru.svg?raw=true" alt="SammyGuru"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/AndroidHeadlines.svg?raw=true" alt="Android Headlines"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/9to5Google.svg?raw=true" alt="9To5Google"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/AndroidAuthority.svg?raw=true" alt="Android Authority"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/AndroidPolice.svg?raw=true" alt="Android Police"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/Sammobile.svg?raw=true" alt="Sammobile"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/Techradar.svg?raw=true" alt="TechRadar"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/AndroidCentral.svg?raw=true" alt="Android Central"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/CNET.svg?raw=true" alt="CNET France"></div>
+                    <div class="logo-item duplicate"><img src="https://github.com/DalgleishGX/Website/blob/main/BusinessStandard.svg?raw=true" alt="Business Standard"></div>
                 </div>
             </div>
         </section>
@@ -400,7 +1060,6 @@
                     </div>
                     <div class="asset-actions">
                         <a href="https://www.figma.com/community/file/1456035621603784201" target="_blank" class="asset-btn btn-figma">Open in Figma</a>
-                        <div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/OneUI%20Design%20Kit.png?raw=true')">View Asset</div>
                     </div>
                 </div>
             </div>
@@ -410,7 +1069,7 @@
                 <div class="concept-meta">
                     <h3>Google Discover Concept</h3>
                     <p>A reimagined Google Discover feed focusing on a cleaner, more personalized user experience.</p>
-                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(6).png?raw=true')">View Asset</div></div>
+                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(6).png?raw=true', this)">View Asset</div></div>
                 </div>
             </div>
 
@@ -419,7 +1078,7 @@
                 <div class="concept-meta">
                     <h3>Google Messages Concept</h3>
                     <p>A conceptual take on a more intuitive and feature-rich Google Messages interface.</p>
-                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(7).png?raw=true')">View Asset</div></div>
+                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(7).png?raw=true', this)">View Asset</div></div>
                 </div>
             </div>
 
@@ -428,7 +1087,7 @@
                 <div class="concept-meta">
                     <h3>One UI 8 Concept Suite</h3>
                     <p>A concept as to what Samsung's One UI 8 update could've brought in an ideal world.</p>
-                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(3).png?raw=true')">View Asset</div></div>
+                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(3).png?raw=true', this)">View Asset</div></div>
                 </div>
             </div>
 
@@ -437,7 +1096,7 @@
                 <div class="concept-meta">
                     <h3>Music and Podcast app</h3>
                     <p>An experiment using a Custom design language dubbed VibeFlex to create a application concept from scratch.</p>
-                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(5).png?raw=true')">View Asset</div></div>
+                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(5).png?raw=true', this)">View Asset</div></div>
                 </div>
             </div>
 
@@ -446,7 +1105,7 @@
                 <div class="concept-meta">
                     <h3>One UI X: An Ideal Samsung experience</h3>
                     <p>My Largest Concept to date, A complete experimention of One UI Design Principles to design the most optimized experience a Android skin could offer.</p>
-                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(4)(1).png?raw=true')">View Asset</div></div>
+                    <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(4)(1).png?raw=true', this)">View Asset</div></div>
                 </div>
             </div>
         </div>
@@ -566,17 +1225,35 @@
             </div>
         </div>
         <a href="https://tjg.gg/discord" class="glass-card discord-notice">
-            <img src="https://cdn.simpleicons.org/discord/5865F2" width="30" height="30" alt="Discord">
+            <img src="https://cdn.simpleicons.org/discord/white" width="30" height="30" alt="Discord">
             <span style="font-size: 1.1rem; font-weight: 600;">Join the TJG Discord Server</span>
         </a>
         <span class="section-label">Social Presence</span>
         <div class="portal-grid">
-            <a href="https://x.com/DalgleishGX" class="glass-card portal-card"><img src="https://cdn.simpleicons.org/x/white" class="portal-icon" alt="X"><span style="font-weight: 600;">Twitter</span></a>
-            <a href="https://threads.net/@DalgleishGX" class="glass-card portal-card"><img src="https://cdn.simpleicons.org/threads/white" class="portal-icon" alt="Threads"><span style="font-weight: 600;">Threads</span></a>
-            <a href="https://reddit.com/u/DalgleishGX" class="glass-card portal-card"><img src="https://cdn.simpleicons.org/reddit/white" class="portal-icon" alt="Reddit"><span style="font-weight: 600;">Reddit</span></a>
-            <a href="https://instagram.com/DalgleishGX" class="glass-card portal-card"><img src="https://cdn.simpleicons.org/instagram/white" class="portal-icon" alt="Insta"><span style="font-weight: 600;">Instagram</span></a>
-            <a href="https://github.com/DalgleishGX" class="glass-card portal-card"><img src="https://cdn.simpleicons.org/github/white" class="portal-icon" alt="GitHub"><span style="font-weight: 600;">GitHub</span></a>
-            <a href="mailto:jason@Dalgleishgx.com" class="glass-card portal-card"><img src="https://cdn.simpleicons.org/maildotru/white" class="portal-icon" alt="Email"><span style="font-weight: 600;">Email</span></a>
+            <a href="https://x.com/DalgleishGX" class="glass-card portal-card">
+                <div class="portal-icon" style="--icon-url: url('https://cdn.simpleicons.org/x/white');"></div>
+                <span style="font-weight: 600;">Twitter</span>
+            </a>
+            <a href="https://threads.net/@DalgleishGX" class="glass-card portal-card">
+                <div class="portal-icon" style="--icon-url: url('https://cdn.simpleicons.org/threads/white');"></div>
+                <span style="font-weight: 600;">Threads</span>
+            </a>
+            <a href="https://reddit.com/u/DalgleishGX" class="glass-card portal-card">
+                <div class="portal-icon" style="--icon-url: url('https://cdn.simpleicons.org/reddit/white');"></div>
+                <span style="font-weight: 600;">Reddit</span>
+            </a>
+            <a href="https://instagram.com/DalgleishGX" class="glass-card portal-card">
+                <div class="portal-icon" style="--icon-url: url('https://cdn.simpleicons.org/instagram/white');"></div>
+                <span style="font-weight: 600;">Instagram</span>
+            </a>
+            <a href="https://github.com/DalgleishGX" class="glass-card portal-card">
+                <div class="portal-icon" style="--icon-url: url('https://cdn.simpleicons.org/github/white');"></div>
+                <span style="font-weight: 600;">GitHub</span>
+            </a>
+            <a href="/cdn-cgi/l/email-protection#fd979c8e9293bdb99c919a9198948e959a85d39e9290" class="glass-card portal-card">
+                <div class="portal-icon" style="--icon-url: url('https://cdn.simpleicons.org/maildotru/white');"></div>
+                <span style="font-weight: 600;">Email</span>
+            </a>
         </div>
     </main>
 
@@ -599,7 +1276,46 @@
                         <div class="color-swatch" style="background: #e91e63;" onclick="setAccent('#e91e63', this)"></div>
                         <div class="color-swatch" style="background: #00c853;" onclick="setAccent('#00c853', this)"></div>
                         <div class="color-swatch" style="background: #ff9100;" onclick="setAccent('#ff9100', this)"></div>
-                        <div class="color-swatch" style="background: #ffffff;" onclick="setAccent('#ffffff', this)"></div>
+                        <div class="color-swatch" style="background: #777777;" onclick="setAccent('#777777', this)"></div>
+                    </div>
+                </div>
+
+                <div class="setting-card" id="backdrop-card">
+                    <div class="setting-info">
+                        <div class="icon-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                        </div>
+                        <div class="driver-content">
+                            <span class="driver-name">Backdrop</span>
+                            <span class="driver-specs">Choose your background style.</span>
+                        </div>
+                    </div>
+                    <div class="backdrop-picker" id="backdropPicker">
+                        <div class="backdrop-trigger" id="backdropTrigger" onclick="toggleBackdropDropdown(event)">
+                            <div class="backdrop-preview-thumb">
+                                <canvas id="thumbActive" width="76" height="52"></canvas>
+                            </div>
+                            <span class="backdrop-trigger-label" id="backdropTriggerLabel">Space</span>
+                            <svg class="backdrop-trigger-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                        </div>
+                        <div class="backdrop-dropdown" id="backdropDropdown">
+                            <div class="backdrop-option" id="bdopt-space" onclick="selectBackdrop('space')">
+                                <div class="backdrop-option-thumb"><canvas id="thumbSpace" width="108" height="72"></canvas></div>
+                                <div class="backdrop-option-info">
+                                    <span class="backdrop-option-name">Space</span>
+                                    <span class="backdrop-option-desc">Stars, nebulae &amp; shooting stars</span>
+                                </div>
+                                <svg class="backdrop-option-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="backdrop-option" id="bdopt-circuit" onclick="selectBackdrop('circuit')">
+                                <div class="backdrop-option-thumb"><canvas id="thumbCircuit" width="108" height="72"></canvas></div>
+                                <div class="backdrop-option-info">
+                                    <span class="backdrop-option-name">Circuit</span>
+                                    <span class="backdrop-option-desc">Animated traces &amp; accent glow</span>
+                                </div>
+                                <svg class="backdrop-option-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -616,6 +1332,8 @@
                         <span class="slider"></span>
                     </label>
                 </div>
+
+
 
                 <div class="setting-card" id="sound-card-ui">
                     <div class="setting-info">
@@ -699,15 +1417,121 @@
                         <span class="slider"></span>
                     </label>
                 </div>
+
+
+            </div>
+            </div>
+
+            <span class="section-label" style="margin-top: 10px;">Experiments</span>
+            <div class="glass-card dropdown-container" onclick="toggleDropdown(this)">
+                <div class="dropdown-header">
+                    <div style="display: flex; align-items: center; gap: 18px;">
+                        <div class="icon-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                        </div>
+                        <div class="driver-content">
+                            <span class="driver-name">Experiments</span>
+                            <span class="driver-specs">Experimental features — may change or be removed.</span>
+                        </div>
+                    </div>
+                    <div class="dropdown-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="dropdown-content">
+                    <div class="experiment-list">
+                        <div class="experiment-item" id="posts-page-card" onclick="event.stopPropagation()">
+                            <div class="setting-info">
+                                <div class="icon-box">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                </div>
+                                <div class="driver-content">
+                                    <span class="driver-name">Posts Page</span>
+                                    <span class="driver-specs">Live feed of posts from X / Twitter.</span>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="posts-toggle" onchange="togglePostsPage(this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="experiment-item" id="tinted-glass-card" onclick="event.stopPropagation()">
+                            <div class="setting-info">
+                                <div class="icon-box">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                                </div>
+                                <div class="driver-content">
+                                    <span class="driver-name">Tinted Glass</span>
+                                    <span class="driver-specs">Tint glass surfaces with your accent color.</span>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="tinted-glass-toggle" onchange="toggleSetting('tinted-glass', this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
             </div>
         </section>
     </main>
 
+    <main id="posts" class="page">
+        <section style="width:100%;display:flex;flex-direction:column;gap:20px;">
+            <span class="section-label">Posts</span>
+
+            <!-- Loading state -->
+            <div id="posts-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:80px 0;color:var(--text-muted);">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite;opacity:0.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                <span style="font-size:0.9rem;">Loading posts…</span>
+            </div>
+
+            <!-- Error state -->
+            <div id="posts-error" style="display:none;flex-direction:column;align-items:center;gap:14px;padding:80px 0;color:var(--text-muted);">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span style="font-size:0.9rem;" id="posts-error-msg">Couldn't load posts.</span>
+            </div>
+
+            <!-- Feed -->
+            <div id="posts-feed" style="display:none;flex-direction:column;gap:16px;"></div>
+        </section>
+    </main>
+
+
     <footer>Designed by <strong>DalgleishGX</strong> &bull; Coded by <strong>AI</strong></footer>
 
-    <script>
+        <div id="discordBanner" class="toast-banner" onclick="window.open('https://tjg.gg/discord', '_blank')">
+            <div class="toast-left">
+                <div class="toast-icon">
+                    <i class="fab fa-discord"></i>
+                </div>
+                <div class="toast-text">
+                    <span class="toast-title">Join the TJG Discord Server</span>
+                </div>
+            </div>
+            <button class="toast-close" onclick="event.stopPropagation(); dismissBanner();">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div id="assetModal" class="asset-modal" onclick="closeAsset()">
+            <div class="modal-glass-content" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <div id="modalTitleText" class="modal-square-title">Asset Preview</div>
+                    <div class="modal-header-actions">
+                        <button id="modalExternalLink" class="modal-action-square" title="Open in New Tab">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                        <button class="modal-close-square" onclick="closeAsset()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <img id="enlargedAsset" src="" alt="">
+            </div>
+        </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         window.addEventListener('DOMContentLoaded', () => {
-            const settings = ['perf-mode', 'disable-animations', 'disable-glass', 'enable-sounds', 'hide-labels'];
+            const settings = ['perf-mode', 'disable-animations', 'disable-glass', 'enable-sounds', 'hide-labels', 'tinted-glass', 'space-bg', 'circuit-bg', 'posts-page'];
             const savedAccent = localStorage.getItem('accent-color') || '#1a73e8';
             document.documentElement.style.setProperty('--accent-color', savedAccent);
             
@@ -741,6 +1565,29 @@
                         const toggle = document.getElementById('labels-toggle');
                         if (toggle) toggle.checked = !isActive;
                         if (isActive) document.body.classList.add(setting);
+                    } else if (setting === 'tinted-glass') {
+                        const toggle = document.getElementById('tinted-glass-toggle');
+                        if (toggle) toggle.checked = isActive;
+                        if (isActive) document.body.classList.add(setting);
+                    } else if (setting === 'circuit-bg') {
+                        if (isActive) {
+                            document.body.classList.add('circuit-bg');
+                            startCircuitCanvas();
+                        }
+                    } else if (setting === 'space-bg') {
+                        // Default ON if never set
+                        const spaceVal = localStorage.getItem('space-bg');
+                        const spaceOn = spaceVal === null ? true : spaceVal === 'true';
+                        if (spaceOn) {
+                            localStorage.setItem('space-bg', 'true');
+                            document.body.classList.add('space-bg');
+                            startSpaceCanvas();
+                        }
+                    } else if (setting === 'posts-page') {
+                        const toggle = document.getElementById('posts-toggle');
+                        if (toggle) toggle.checked = isActive;
+                        const nav = document.getElementById('posts-nav');
+                        if (nav) nav.style.display = isActive ? '' : 'none';
                     } else if (isActive) {
                         const toggleId = setting === 'disable-animations' ? 'anim-toggle' : 'sound-toggle';
                         const toggle = document.getElementById(toggleId);
@@ -762,8 +1609,11 @@
                 soundToggle.disabled = true;
                 localStorage.setItem('enable-sounds', 'false');
             }
-        });
 
+            // Init backdrop picker — must run after all bg settings are restored
+            setTimeout(initBackdropPicker, 0);
+
+        });
         function playSound(type = 'click') {
             if (window.innerWidth <= 768) return; 
             const isEnabled = localStorage.getItem('enable-sounds') === 'true';
@@ -814,6 +1664,10 @@
             updateFavicon(color);
             document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
             element.classList.add('selected');
+            // Keep circuit gradient in sync with new accent
+            if (document.body.classList.contains('circuit-bg')) updateCircuitGradient();
+            // Redraw backdrop thumbs with new accent
+            renderBackdropThumbs();
         }
 
         function rgbToHex(rgb) {
@@ -841,6 +1695,7 @@
             document.querySelector('.settings-btn-container').classList.remove('active');
             element.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (pageId === 'posts') loadPosts();
         }
 
         function toggleSetting(className, shouldAdd) {
@@ -848,11 +1703,795 @@
             if(shouldAdd) {
                 if (className !== 'enable-sounds') document.body.classList.add(className);
                 localStorage.setItem(className, 'true');
+                // Reduce motion: stop the canvas if space-bg is on
+                if (className === 'disable-animations' && document.body.classList.contains('space-bg')) {
+                    stopSpaceCanvas();
+                }
             } else {
                 if (className !== 'enable-sounds') document.body.classList.remove(className);
                 localStorage.setItem(className, 'false');
+                // Restore canvas if space-bg is still on
+                if (className === 'disable-animations' && document.body.classList.contains('space-bg') && !spaceAnimFrame) {
+                    startSpaceCanvas();
+                }
             }
         }
+
+        /* ===== ENHANCED SPACE BACKGROUND ENGINE ===== */
+        let spaceAnimFrame = null;
+        let shootingStarTimer = null;
+        let shooterPausedAt = null;   // timestamp when tab was hidden
+        let shooterResumeDelay = null; // remaining ms when tab was hidden
+        let spawnShooterGlobal = null; // set by startSpaceCanvas
+
+        // Pause/resume shooting star timer when the tab is hidden/visible
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Tab hidden: cancel pending timer and remember how much time was left
+                if (shootingStarTimer !== null) {
+                    clearTimeout(shootingStarTimer);
+                    shootingStarTimer = null;
+                    // We don't know remaining time exactly, so just restart fresh on resume
+                    shooterResumeDelay = 1500 + Math.random() * 2000;
+                }
+                shooterPausedAt = Date.now();
+            } else {
+                // Tab visible again: restart with a fresh natural delay (no burst)
+                if (shooterPausedAt !== null && document.body.classList.contains('space-bg')) {
+                    const delay = shooterResumeDelay !== null ? shooterResumeDelay : (1500 + Math.random() * 2000);
+                    shootingStarTimer = setTimeout(() => {
+                        if (typeof spawnShooterGlobal === 'function') spawnShooterGlobal();
+                    }, delay);
+                    shooterResumeDelay = null;
+                    shooterPausedAt = null;
+                }
+            }
+        });
+
+        function toggleSpaceBg(isActive) {
+            playSound('switch');
+            if (isActive) {
+                document.body.classList.add('space-bg');
+                localStorage.setItem('space-bg', 'true');
+                startSpaceCanvas();
+            } else {
+                document.body.classList.remove('space-bg');
+                localStorage.setItem('space-bg', 'false');
+                stopSpaceCanvas();
+            }
+        }
+
+        function startSpaceCanvas() {
+            const canvas = document.getElementById('space-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            // Generate stars
+            const stars = [];
+            const count = 320;
+            for (let i = 0; i < count; i++) {
+                const big = Math.random() < 0.08; // ~8% are larger spike stars
+                stars.push({
+                    x: Math.random(),
+                    y: Math.random(),
+                    size: big ? Math.random() * 2.8 + 2.2 : Math.random() * 1.6 + 0.7,
+                    speed: Math.random() * 0.00003 + 0.000008,
+                    drift: (Math.random() - 0.5) * 0.000015,
+                    phase: Math.random() * Math.PI * 2,
+                    twinkleSpeed: Math.random() * 0.012 + 0.004,
+                    alpha: Math.random() * 0.55 + 0.25,
+                    color: Math.random() < 0.12
+                        ? `hsl(${210 + Math.random()*60},70%,92%)`
+                        : 'white',
+                    spike: big, // only larger ones get the 4-point spike
+                });
+            }
+
+            // Shooting star pool
+            const shooters = [];
+
+            function spawnShooter() {
+                if (!document.body.classList.contains('space-bg')) return;
+                if (document.hidden) {
+                    // Don't spawn while hidden; reschedule for when visible
+                    shooterResumeDelay = 1500 + Math.random() * 2000;
+                    return;
+                }
+                // angle ~30-50deg downward-right
+                const angleDeg = 30 + Math.random() * 20;
+                const angleRad = angleDeg * Math.PI / 180;
+                const speed = 8 + Math.random() * 6;       // px per frame
+                const length = 90 + Math.random() * 80;     // tail length px
+                const life = Math.round((length + 300) / speed) + 10;
+                shooters.push({
+                    x: (0.1 + Math.random() * 0.7) * canvas.width,
+                    y: (0.02 + Math.random() * 0.3) * canvas.height,
+                    vx: Math.cos(angleRad) * speed,
+                    vy: Math.sin(angleRad) * speed,
+                    length,
+                    life,
+                    age: 0,
+                    alpha: 0,
+                });
+                const nextDelay = (2800 + Math.random() * 6000);
+                shootingStarTimer = setTimeout(spawnShooter, nextDelay);
+            }
+            // Expose so the visibility handler can call it
+            spawnShooterGlobal = spawnShooter;
+
+            let t = 0;
+            function draw() {
+                if (!document.body.classList.contains('space-bg')) return;
+                // Don't render while tab is hidden — avoids frame debt burst on return
+                if (document.hidden) {
+                    spaceAnimFrame = requestAnimationFrame(draw);
+                    return;
+                }
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                t++;
+
+                // --- Stars ---
+                stars.forEach(s => {
+                    s.y -= s.speed;
+                    s.x += s.drift;
+                    if (s.y < -0.01) s.y = 1.01;
+                    if (s.x < -0.01) s.x = 1.01;
+                    if (s.x > 1.01)  s.x = -0.01;
+
+                    const twinkle = Math.sin(t * s.twinkleSpeed + s.phase);
+                    const alpha = s.alpha * (0.5 + 0.5 * twinkle);
+                    const px = s.x * canvas.width;
+                    const py = s.y * canvas.height;
+
+                    ctx.save();
+                    ctx.globalAlpha = Math.max(0, alpha);
+                    ctx.fillStyle = s.color;
+
+                    if (s.spike) {
+                        // Clean 4-point star: two diamond axes, long vertical + wider horizontal
+                        const hl = s.size * 3.2;   // half-length vertical
+                        const hw = s.size * 1.55;  // half-width horizontal (slightly wider)
+                        ctx.shadowColor = s.color;
+                        ctx.shadowBlur = 8;
+                        ctx.beginPath();
+                        ctx.moveTo(px,      py - hl);
+                        ctx.quadraticCurveTo(px + hw * 0.2, py - hw * 0.2, px + hw, py);
+                        ctx.quadraticCurveTo(px + hw * 0.2, py + hw * 0.2, px,      py + hl);
+                        ctx.quadraticCurveTo(px - hw * 0.2, py + hw * 0.2, px - hw, py);
+                        ctx.quadraticCurveTo(px - hw * 0.2, py - hw * 0.2, px,      py - hl);
+                        ctx.fill();
+                    } else {
+                        ctx.shadowBlur = s.size > 1.0 ? 4 : 1;
+                        ctx.shadowColor = s.color;
+                        ctx.beginPath();
+                        ctx.arc(px, py, s.size * 0.65, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                });
+
+                // --- Shooting stars ---
+                for (let i = shooters.length - 1; i >= 0; i--) {
+                    const s = shooters[i];
+                    s.age++;
+                    s.x += s.vx;
+                    s.y += s.vy;
+
+                    // Fade in first 8 frames, fade out last 20
+                    if (s.age < 8) s.alpha = s.age / 8;
+                    else if (s.age > s.life - 20) s.alpha = (s.life - s.age) / 20;
+                    else s.alpha = 1;
+
+                    if (s.age >= s.life || s.alpha <= 0) {
+                        shooters.splice(i, 1);
+                        continue;
+                    }
+
+                    const tailX = s.x - (s.vx / Math.hypot(s.vx, s.vy)) * s.length;
+                    const tailY = s.y - (s.vy / Math.hypot(s.vx, s.vy)) * s.length;
+
+                    const grad = ctx.createLinearGradient(tailX, tailY, s.x, s.y);
+                    grad.addColorStop(0, `rgba(255,255,255,0)`);
+                    grad.addColorStop(0.6, `rgba(200,220,255,${s.alpha * 0.4})`);
+                    grad.addColorStop(1, `rgba(255,255,255,${s.alpha})`);
+
+                    ctx.save();
+                    ctx.strokeStyle = grad;
+                    ctx.lineWidth = 1.5;
+                    ctx.lineCap = 'round';
+                    ctx.shadowColor = 'rgba(180,210,255,0.9)';
+                    ctx.shadowBlur = 6;
+                    ctx.beginPath();
+                    ctx.moveTo(tailX, tailY);
+                    ctx.lineTo(s.x, s.y);
+                    ctx.stroke();
+                    // bright head dot
+                    ctx.globalAlpha = s.alpha;
+                    ctx.fillStyle = 'white';
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                spaceAnimFrame = requestAnimationFrame(draw);
+            }
+
+            // Kick off first shooting star after a short delay
+            shootingStarTimer = setTimeout(spawnShooter, 1500 + Math.random() * 2000);
+            draw();
+        }
+
+        function stopSpaceCanvas() {
+            if (spaceAnimFrame) { cancelAnimationFrame(spaceAnimFrame); spaceAnimFrame = null; }
+            if (shootingStarTimer) { clearTimeout(shootingStarTimer); shootingStarTimer = null; }
+            const canvas = document.getElementById('space-canvas');
+            if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        }
+        /* ===== END SPACE ENGINE ===== */
+
+        /* ===== POSTS PAGE ENGINE ===== */
+        const POSTS_RSS = 'https://rsshub-production-07b8.up.railway.app/twitter/user/dalgleishgx';
+        const POSTS_PROXY = 'https://api.allorigins.win/get?url=' + encodeURIComponent(POSTS_RSS);
+        const AVATAR_URL  = 'https://pbs.twimg.com/profile_images/1947840465518170112/oBBoMeCT_400x400.jpg';
+
+        function togglePostsPage(isActive) {
+            playSound('switch');
+            const nav = document.getElementById('posts-nav');
+            if (isActive) {
+                localStorage.setItem('posts-page', 'true');
+                if (nav) nav.style.display = '';
+            } else {
+                localStorage.setItem('posts-page', 'false');
+                if (nav) nav.style.display = 'none';
+                // Navigate away if currently on posts
+                if (document.getElementById('posts').classList.contains('active')) {
+                    showPage('home', document.querySelector('.nav-icon'));
+                }
+            }
+        }
+
+        function formatPostDate(dateStr) {
+            try {
+                const d = new Date(dateStr);
+                const now = new Date();
+                const diff = (now - d) / 1000;
+                if (diff < 60)    return 'just now';
+                if (diff < 3600)  return Math.floor(diff/60) + 'm ago';
+                if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+                if (diff < 604800) return Math.floor(diff/86400) + 'd ago';
+                return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: d.getFullYear() !== now.getFullYear() ? 'numeric' : undefined });
+            } catch(e) { return ''; }
+        }
+
+        function extractPostData(item) {
+            const title   = item.querySelector('title')?.textContent || '';
+            const link    = item.querySelector('link')?.textContent
+                         || item.querySelector('link')?.nextSibling?.textContent
+                         || '';
+            const pubDate = item.querySelector('pubDate')?.textContent || '';
+            const descRaw = item.querySelector('description')?.textContent || '';
+
+            // Parse description HTML
+            const tmp = document.createElement('div');
+            tmp.innerHTML = descRaw;
+
+            // Extract images before stripping
+            const imgs = [...tmp.querySelectorAll('img')]
+                .map(i => i.src)
+                .filter(s => s && !s.includes('emoji') && !s.includes('twimg.com/emoji'));
+
+            // Get clean text — remove img tags, clean whitespace
+            tmp.querySelectorAll('img').forEach(i => i.remove());
+            let text = tmp.textContent.trim()
+                .replace(/\s{3,}/g, '\n\n')
+                .replace(/https?:\/\/t\.co\/\S+/g, '') // strip t.co trailing links
+                .trim();
+
+            // Use title as fallback if description empty
+            if (!text && title && !title.startsWith('RT ')) text = title;
+
+            // Extract tweet ID from link for the X.com URL
+            const tweetId = (link.match(/status\/(\d+)/) || [])[1];
+            const xUrl = tweetId
+                ? `https://x.com/dalgleishgx/status/${tweetId}`
+                : `https://x.com/dalgleishgx`;
+
+            return { text, imgs, pubDate, xUrl };
+        }
+
+        function buildPostCard(data) {
+            const card = document.createElement('div');
+            card.className = 'post-card';
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'post-header';
+            header.innerHTML = `
+                <img class="post-avatar" src="${AVATAR_URL}" alt="DalgleishGX" onerror="this.style.display='none'">
+                <div class="post-author">
+                    <span class="post-author-name">DalgleishGX</span>
+                    <span class="post-author-handle">@dalgleishgx</span>
+                </div>
+                <span class="post-date">${formatPostDate(data.pubDate)}</span>
+            `;
+            card.appendChild(header);
+
+            // Text
+            if (data.text) {
+                const textEl = document.createElement('div');
+                textEl.className = 'post-text';
+                // Linkify URLs and @mentions and #hashtags
+                textEl.innerHTML = data.text
+                    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                    .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+                    .replace(/@(\w+)/g, '<a href="https://x.com/$1" target="_blank" rel="noopener">@$1</a>')
+                    .replace(/#(\w+)/g, '<a href="https://x.com/hashtag/$1" target="_blank" rel="noopener">#$1</a>');
+                card.appendChild(textEl);
+            }
+
+            // Images
+            if (data.imgs.length > 0) {
+                const grid = document.createElement('div');
+                grid.className = `post-images count-${Math.min(data.imgs.length, 4)}`;
+                data.imgs.slice(0, 4).forEach(src => {
+                    const img = document.createElement('img');
+                    img.className = 'post-img';
+                    img.src = src;
+                    img.alt = '';
+                    img.loading = 'lazy';
+                    img.onclick = () => window.open(src, '_blank');
+                    img.onerror = () => img.style.display = 'none';
+                    grid.appendChild(img);
+                });
+                card.appendChild(grid);
+            }
+
+            // Footer
+            const footer = document.createElement('div');
+            footer.className = 'post-footer';
+            footer.innerHTML = `
+                <a href="${data.xUrl}" target="_blank" rel="noopener" class="post-open-btn">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Open in X
+                </a>
+            `;
+            card.appendChild(footer);
+
+            return card;
+        }
+
+        let _postsFetched = false;
+
+        function loadPosts() {
+            if (_postsFetched) return;
+            _postsFetched = true;
+
+            const loading = document.getElementById('posts-loading');
+            const error   = document.getElementById('posts-error');
+            const feed    = document.getElementById('posts-feed');
+
+            loading.style.display = 'flex';
+            error.style.display   = 'none';
+            feed.style.display    = 'none';
+
+            fetch(POSTS_PROXY)
+                .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+                .then(json => {
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(json.contents, 'text/xml');
+                    const items = [...xml.querySelectorAll('item')];
+
+                    if (!items.length) throw new Error('No posts found');
+
+                    feed.innerHTML = '';
+                    items.forEach(item => {
+                        const data = extractPostData(item);
+                        if (!data.text && !data.imgs.length) return;
+                        feed.appendChild(buildPostCard(data));
+                    });
+
+                    loading.style.display = 'none';
+                    feed.style.display    = 'flex';
+                })
+                .catch(err => {
+                    console.error('Posts load error:', err);
+                    loading.style.display = 'none';
+                    document.getElementById('posts-error-msg').textContent =
+                        'Couldn\'t load posts. The feed may be temporarily unavailable.';
+                    error.style.display = 'flex';
+                });
+        }
+        /* ===== END POSTS ENGINE ===== */
+
+        /* ===== CIRCUIT BOARD ENGINE ===== */
+        let circuitAnimFrame = null;
+
+        function toggleCircuitBg(isActive) {
+            playSound('switch');
+            if (isActive) {
+                document.body.classList.add('circuit-bg');
+                localStorage.setItem('circuit-bg', 'true');
+                startCircuitCanvas();
+            } else {
+                document.body.classList.remove('circuit-bg', 'circuit-canvas-visible');
+                localStorage.setItem('circuit-bg', 'false');
+                stopCircuitCanvas();
+            }
+        }
+
+        function stopCircuitCanvas() {
+            if (circuitAnimFrame) { cancelAnimationFrame(circuitAnimFrame); circuitAnimFrame = null; }
+            const canvas = document.getElementById('circuit-canvas');
+            if (canvas) {
+                document.body.classList.remove('circuit-canvas-visible');
+                canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+            }
+            // Remove circuit gradient overrides
+            const root = document.documentElement;
+            root.style.removeProperty('--circuit-grad-a');
+            root.style.removeProperty('--circuit-grad-b');
+            root.style.removeProperty('--circuit-grad-c');
+        }
+
+        function getAccentRgb() {
+            const raw = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+            // parse hex or rgb
+            if (raw.startsWith('#')) {
+                const r = parseInt(raw.slice(1,3),16);
+                const g = parseInt(raw.slice(3,5),16);
+                const b = parseInt(raw.slice(5,7),16);
+                return [r, g, b];
+            }
+            const m = raw.match(/\d+/g);
+            if (m) return [parseInt(m[0]), parseInt(m[1]), parseInt(m[2])];
+            return [26, 115, 232];
+        }
+
+        function updateCircuitGradient() {
+            const [r, g, b] = getAccentRgb();
+            const root = document.documentElement;
+            root.style.setProperty('--circuit-grad-a', `rgba(${r},${g},${b},0.28)`);
+            root.style.setProperty('--circuit-grad-b', `rgba(${r},${g},${b},0.16)`);
+            root.style.setProperty('--circuit-grad-c', `rgba(${r},${g},${b},0.07)`);
+        }
+
+        function startCircuitCanvas() {
+            const canvas = document.getElementById('circuit-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', () => { resize(); buildGrid(); });
+            updateCircuitGradient();
+
+            // ---- Grid & trace generation ----
+            const CELL = 48;           // grid cell size px
+            let cols, rows, nodes, traces, pulses;
+
+            function buildGrid() {
+                cols = Math.ceil(canvas.width  / CELL) + 1;
+                rows = Math.ceil(canvas.height / CELL) + 1;
+
+                // Nodes: grid intersections, some with pads
+                nodes = [];
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        nodes.push({
+                            x: c * CELL,
+                            y: r * CELL,
+                            pad: Math.random() < 0.10, // ~10% get a pad circle
+                            padSize: 3 + Math.random() * 3,
+                        });
+                    }
+                }
+
+                // Traces: axis-aligned segments connecting random node pairs
+                traces = [];
+                const used = new Set();
+                const attempts = Math.floor(cols * rows * 0.55);
+                for (let i = 0; i < attempts; i++) {
+                    const r = Math.floor(Math.random() * (rows - 1));
+                    const c = Math.floor(Math.random() * (cols - 1));
+                    const horiz = Math.random() < 0.5;
+                    let r2 = r, c2 = c;
+                    if (horiz) { c2 = c + 1 + Math.floor(Math.random() * 2); if (c2 >= cols) continue; }
+                    else       { r2 = r + 1 + Math.floor(Math.random() * 2); if (r2 >= rows) continue; }
+                    const key = `${r},${c}-${r2},${c2}`;
+                    if (used.has(key)) continue;
+                    used.add(key);
+                    const x1 = c  * CELL, y1 = r  * CELL;
+                    const x2 = c2 * CELL, y2 = r2 * CELL;
+                    traces.push({ x1, y1, x2, y2, alpha: 0.08 + Math.random() * 0.10 });
+                }
+
+                // Pulses: glowing dots that travel along traces
+                pulses = [];
+                const numPulses = Math.floor(cols * rows * 0.012);
+                for (let i = 0; i < numPulses; i++) spawnPulse();
+            }
+
+            function spawnPulse(trace) {
+                const t = trace || traces[Math.floor(Math.random() * traces.length)];
+                if (!t) return;
+                const reverse = Math.random() < 0.5;
+                pulses.push({
+                    trace: t,
+                    progress: reverse ? 1 : 0,
+                    dir: reverse ? -1 : 1,
+                    speed: 0.004 + Math.random() * 0.008,
+                    size:  1.5 + Math.random() * 1.5,
+                    alpha: 0.7 + Math.random() * 0.3,
+                });
+            }
+
+            buildGrid();
+
+            // Fade in
+            setTimeout(() => document.body.classList.add('circuit-canvas-visible'), 50);
+
+            function draw() {
+                if (!document.body.classList.contains('circuit-bg')) return;
+                if (document.hidden) { circuitAnimFrame = requestAnimationFrame(draw); return; }
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const [r, g, b] = getAccentRgb();
+
+                // Draw traces
+                traces.forEach(t => {
+                    ctx.beginPath();
+                    ctx.moveTo(t.x1, t.y1);
+                    ctx.lineTo(t.x2, t.y2);
+                    ctx.strokeStyle = `rgba(${r},${g},${b},${t.alpha})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                });
+
+                // Draw pads
+                nodes.forEach(n => {
+                    if (!n.pad) return;
+                    ctx.beginPath();
+                    ctx.arc(n.x, n.y, n.padSize, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${r},${g},${b},0.18)`;
+                    ctx.fill();
+                    ctx.strokeStyle = `rgba(${r},${g},${b},0.35)`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                });
+
+                // Draw & advance pulses
+                for (let i = pulses.length - 1; i >= 0; i--) {
+                    const p = pulses[i];
+                    p.progress += p.speed * p.dir;
+
+                    if (p.progress < 0 || p.progress > 1) {
+                        pulses.splice(i, 1);
+                        spawnPulse();
+                        continue;
+                    }
+
+                    const px = p.trace.x1 + (p.trace.x2 - p.trace.x1) * p.progress;
+                    const py = p.trace.y1 + (p.trace.y2 - p.trace.y1) * p.progress;
+
+                    // Glow
+                    ctx.save();
+                    ctx.shadowColor = `rgba(${r},${g},${b},0.9)`;
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(px, py, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${r},${g},${b},${p.alpha})`;
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                circuitAnimFrame = requestAnimationFrame(draw);
+            }
+
+            draw();
+        }
+        /* ===== END CIRCUIT ENGINE ===== */
+
+        /* ===== BACKDROP PICKER ===== */
+        function drawSpaceThumb(canvasId) {
+            const c = document.getElementById(canvasId);
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width, h = c.height;
+            ctx.clearRect(0, 0, w, h);
+            // Deep bg
+            ctx.fillStyle = '#05050a';
+            ctx.fillRect(0, 0, w, h);
+            // Nebula blobs
+            const g1 = ctx.createRadialGradient(w*0.2, h*0.3, 0, w*0.2, h*0.3, w*0.5);
+            g1.addColorStop(0, 'rgba(106,36,227,0.35)'); g1.addColorStop(1, 'transparent');
+            ctx.fillStyle = g1; ctx.fillRect(0, 0, w, h);
+            const g2 = ctx.createRadialGradient(w*0.8, h*0.7, 0, w*0.8, h*0.7, w*0.4);
+            g2.addColorStop(0, 'rgba(26,115,232,0.3)'); g2.addColorStop(1, 'transparent');
+            ctx.fillStyle = g2; ctx.fillRect(0, 0, w, h);
+            // Stars
+            const rng = mulberry32(42);
+            for (let i = 0; i < 38; i++) {
+                const x = rng() * w, y = rng() * h, r = rng() * 1.2 + 0.3;
+                ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255,255,255,${0.4 + rng()*0.6})`; ctx.fill();
+            }
+            // One shooting star
+            ctx.save();
+            const sg = ctx.createLinearGradient(w*0.1, h*0.15, w*0.55, h*0.45);
+            sg.addColorStop(0, 'rgba(255,255,255,0)');
+            sg.addColorStop(1, 'rgba(255,255,255,0.9)');
+            ctx.strokeStyle = sg; ctx.lineWidth = 1; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(w*0.1, h*0.15); ctx.lineTo(w*0.55, h*0.45); ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawCircuitThumb(canvasId) {
+            const c = document.getElementById(canvasId);
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width, h = c.height;
+            const [r, g, b] = getAccentRgb();
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#05050a'; ctx.fillRect(0, 0, w, h);
+            // Accent glow
+            const bg = ctx.createRadialGradient(w*0.5, h*0.5, 0, w*0.5, h*0.5, w*0.6);
+            bg.addColorStop(0, `rgba(${r},${g},${b},0.18)`); bg.addColorStop(1, 'transparent');
+            ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+            // Grid traces
+            const cell = Math.round(w / 5);
+            const rng = mulberry32(17);
+            ctx.strokeStyle = `rgba(${r},${g},${b},0.25)`; ctx.lineWidth = 1;
+            for (let x = 0; x <= w; x += cell) {
+                for (let y = 0; y <= h; y += cell) {
+                    if (rng() > 0.45) { ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+cell,y); ctx.stroke(); }
+                    if (rng() > 0.45) { ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,y+cell); ctx.stroke(); }
+                }
+            }
+            // Pads
+            for (let x = 0; x <= w; x += cell) {
+                for (let y = 0; y <= h; y += cell) {
+                    if (rng() > 0.65) {
+                        ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI*2);
+                        ctx.fillStyle = `rgba(${r},${g},${b},0.5)`; ctx.fill();
+                    }
+                }
+            }
+            // Pulse dot
+            ctx.save();
+            ctx.shadowColor = `rgba(${r},${g},${b},1)`; ctx.shadowBlur = 8;
+            ctx.beginPath(); ctx.arc(w*0.5, h*0.4, 3, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(${r},${g},${b},0.95)`; ctx.fill();
+            ctx.restore();
+        }
+
+        // Seedable RNG so thumbs are deterministic
+        function mulberry32(seed) {
+            return function() { seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+                let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+        }
+
+        function renderBackdropThumbs() {
+            drawSpaceThumb('thumbSpace');
+            drawCircuitThumb('thumbCircuit');
+            // Active thumb mirrors whichever is selected
+            const active = localStorage.getItem('active-backdrop') || 'space';
+            if (active === 'space') drawSpaceThumb('thumbActive');
+            else drawCircuitThumb('thumbActive');
+        }
+
+        // Move the dropdown to <body> on first call so it escapes all stacking contexts
+        let _backdropPortalReady = false;
+        function ensureBackdropPortal() {
+            if (_backdropPortalReady) return;
+            _backdropPortalReady = true;
+            const dd = document.getElementById('backdropDropdown');
+            if (dd && dd.parentElement !== document.body) {
+                document.body.appendChild(dd);
+            }
+        }
+
+        function toggleBackdropDropdown(e) {
+            e.stopPropagation();
+            ensureBackdropPortal();
+            const dropdown = document.getElementById('backdropDropdown');
+            const chevron = document.querySelector('.backdrop-trigger-chevron');
+            const isOpening = !dropdown.classList.contains('open');
+
+            if (isOpening) {
+                const trigger = document.getElementById('backdropTrigger');
+                const rect = trigger.getBoundingClientRect();
+                dropdown.style.top  = (rect.bottom + 8) + 'px';
+                dropdown.style.left = 'auto';
+                dropdown.style.right = (window.innerWidth - rect.right) + 'px';
+                dropdown.classList.add('open');
+                if (chevron) chevron.classList.add('rotated');
+                renderBackdropThumbs();
+            } else {
+                dropdown.classList.remove('open');
+                if (chevron) chevron.classList.remove('rotated');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('backdropDropdown');
+            const trigger  = document.getElementById('backdropTrigger');
+            const chevron  = document.querySelector('.backdrop-trigger-chevron');
+            if (!dropdown) return;
+            if (!dropdown.contains(e.target) && e.target !== trigger && !trigger.contains(e.target)) {
+                dropdown.classList.remove('open');
+                if (chevron) chevron.classList.remove('rotated');
+            }
+        });
+
+        function selectBackdrop(type) {
+            const prev = localStorage.getItem('active-backdrop') || 'space';
+            if (prev === type) { const dd=document.getElementById('backdropDropdown'); if(dd) dd.classList.remove('open'); const ch=document.querySelector('.backdrop-trigger-chevron'); if(ch) ch.classList.remove('rotated'); return; }
+            localStorage.setItem('active-backdrop', type);
+
+            // Swap backgrounds
+            if (type === 'space') {
+                stopCircuitCanvas();
+                document.body.classList.remove('circuit-bg');
+                localStorage.setItem('circuit-bg', 'false');
+                document.body.classList.add('space-bg');
+                localStorage.setItem('space-bg', 'true');
+                if (!spaceAnimFrame) startSpaceCanvas();
+            } else {
+                stopSpaceCanvas();
+                document.body.classList.remove('space-bg');
+                localStorage.setItem('space-bg', 'false');
+                document.body.classList.add('circuit-bg');
+                localStorage.setItem('circuit-bg', 'true');
+                if (!circuitAnimFrame) startCircuitCanvas();
+            }
+
+            updateBackdropUI(type);
+            const _dd=document.getElementById('backdropDropdown'); if(_dd) _dd.classList.remove('open'); const _ch=document.querySelector('.backdrop-trigger-chevron'); if(_ch) _ch.classList.remove('rotated');
+        }
+
+        function updateBackdropUI(type) {
+            // Update trigger label
+            const label = document.getElementById('backdropTriggerLabel');
+            if (label) label.textContent = type === 'space' ? 'Space' : 'Circuit';
+            // Update active thumb
+            if (type === 'space') drawSpaceThumb('thumbActive');
+            else drawCircuitThumb('thumbActive');
+            // Selected state on options
+            document.querySelectorAll('.backdrop-option').forEach(el => el.classList.remove('selected'));
+            const sel = document.getElementById('bdopt-' + type);
+            if (sel) sel.classList.add('selected');
+        }
+
+        function initBackdropPicker() {
+            // Determine active backdrop — if space-bg was just defaulted on, treat as 'space'
+            const stored = localStorage.getItem('active-backdrop');
+            let active = stored;
+            if (!active) {
+                // Infer from which bg class is currently on body
+                if (document.body.classList.contains('circuit-bg')) active = 'circuit';
+                else active = 'space';
+                localStorage.setItem('active-backdrop', active);
+            }
+            renderBackdropThumbs();
+            updateBackdropUI(active);
+        }
+        /* ===== END BACKDROP PICKER ===== */
 
         function togglePerformance(isActive) {
             playSound('switch');
@@ -870,6 +2509,16 @@
                 localStorage.setItem('perf-mode', 'true');
                 localStorage.setItem('disable-animations', 'true');
                 localStorage.setItem('disable-glass', 'true');
+                stopSpaceCanvas();
+                stopCircuitCanvas();
+                const circuitToggle = document.getElementById('circuit-bg-toggle');
+                const circuitBgCard = document.getElementById('circuit-bg-card');
+                if (circuitToggle) circuitToggle.checked = false;
+                if (circuitBgCard) circuitBgCard.classList.add('disabled');
+                const spaceToggle = document.getElementById('space-bg-toggle');
+                const spaceBgCard = document.getElementById('space-bg-card');
+                if (spaceToggle) spaceToggle.checked = false;
+                if (spaceBgCard) spaceBgCard.classList.add('disabled');
             } else {
                 document.body.classList.remove('perf-mode', 'disable-animations', 'disable-glass');
                 animToggle.checked = false;
@@ -879,6 +2528,8 @@
                 localStorage.setItem('perf-mode', 'false');
                 localStorage.setItem('disable-animations', 'false');
                 localStorage.setItem('disable-glass', 'false');
+                const spaceBgCard = document.getElementById('space-bg-card');
+                if (spaceBgCard) spaceBgCard.classList.remove('disabled');
             }
         }
 
@@ -888,6 +2539,48 @@
         }
 
         function openAsset(url) { window.open(url, '_blank'); }
+
+        function dismissBanner() {
+            const banner = document.getElementById('discordBanner');
+            banner.classList.add('toast-hidden');
+            localStorage.setItem('discord_toast_dismissed', 'true');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('discord_toast_dismissed') === 'true') {
+                const banner = document.getElementById('discordBanner');
+                if (banner) {
+                    banner.style.display = 'none';
+                }
+            }
+        });
+        function openAsset(url, element) {
+            const modal = document.getElementById('assetModal');
+            const modalImg = document.getElementById('enlargedAsset');
+            const modalTitle = document.getElementById('modalTitleText');
+            const externalBtn = document.getElementById('modalExternalLink');
+            
+            modalImg.src = url;
+            
+            // Link the "New Tab" button to this specific URL
+            externalBtn.onclick = function() { window.open(url, '_blank'); };
+            
+            // Attempt to grab title from the card
+            if (element) {
+                const card = element.closest('.floating-window');
+                const h3 = card ? card.querySelector('h3') : null;
+                modalTitle.innerText = h3 ? h3.innerText : "Asset Preview";
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAsset() {
+            const modal = document.getElementById('assetModal');
+            if (modal) modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     </script>
 </body>
 </html>
