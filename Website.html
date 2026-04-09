@@ -150,6 +150,183 @@
         body.disable-animations .discord-notice:hover { transform: none !important; }
         body.disable-animations::before, body.disable-animations::after { animation: none !important; }
 
+        /* ===== THEME SYSTEM (Glass / Light / Dark) ===== */
+
+        /* --- THEME PICKER CARD --- */
+        .theme-picker-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            width: 100%;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .theme-picker-info { display: flex; align-items: center; gap: 18px; }
+        .theme-options { display: flex; gap: 12px; }
+        .theme-option {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            cursor: pointer;
+        }
+        .theme-preview {
+            width: 72px; height: 52px;
+            border-radius: 14px;
+            border: 2px solid transparent;
+            overflow: hidden; position: relative;
+            transition: border-color 0.2s, transform 0.15s;
+        }
+        .theme-option:hover .theme-preview { transform: translateY(-2px); }
+        .theme-option.active .theme-preview { border-color: var(--accent-color); }
+        .theme-preview-inner {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+        }
+        /* Glass preview — translucent cards over space backdrop */
+        .theme-preview.glass-prev { background: linear-gradient(135deg, #06060f 0%, #120d2e 50%, #06060f 100%); }
+        .theme-preview.glass-prev .prev-topbar { height: 14px; background: rgba(255,255,255,0.10); border-bottom: 1px solid rgba(255,255,255,0.15); }
+        .theme-preview.glass-prev .prev-card { margin: 5px 6px; height: 28px; border-radius: 7px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); }
+        /* Light preview */
+        .theme-preview.light-prev .theme-preview-inner { background: #f0f2f8; }
+        .theme-preview.light-prev .prev-topbar { height: 14px; background: rgba(0,0,0,0.04); }
+        .theme-preview.light-prev .prev-card { margin: 5px 6px; height: 28px; border-radius: 7px; background: rgba(255,255,255,0.85); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        /* Dark preview — solid, no glass */
+        .theme-preview.dark-prev .theme-preview-inner { background: #0d0d18; }
+        .theme-preview.dark-prev .prev-topbar { height: 14px; background: #111116; }
+        .theme-preview.dark-prev .prev-card { margin: 5px 6px; height: 28px; border-radius: 7px; background: #18181f; }
+
+        .theme-label {
+            font-size: 0.78rem; font-weight: 600; color: var(--text-muted);
+            transition: color 0.2s;
+        }
+        .theme-option.active .theme-label { color: var(--accent-color); }
+        .theme-radio {
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            transition: border-color 0.2s;
+        }
+        .theme-option.active .theme-radio { border-color: var(--accent-color); }
+        .theme-radio-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent-color);
+            opacity: 0; transform: scale(0);
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .theme-option.active .theme-radio-dot { opacity: 1; transform: scale(1); }
+
+        @media (max-width: 768px) {
+            .theme-picker-card { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .theme-preview { width: 60px; height: 44px; }
+        }
+
+        /* ===== GLASS THEME (default — current dark with blur/glass) ===== */
+        /* This is the base :root state — no extra classes needed */
+
+        /* ===== LIGHT THEME ===== */
+        body.light-mode {
+            --bg-deep: #f0f2f8;
+            --gradient-purple: rgba(106, 36, 227, 0.10);
+            --gradient-blue: rgba(26, 115, 232, 0.10);
+            --glass-bg: rgba(255, 255, 255, 0.03); /* unused in light — overridden below */
+            --glass-border: rgba(0, 0, 0, 0.09);
+            --inner-card: rgba(255, 255, 255, 0.65);
+            --text-main: #0d0d1a;
+            --text-muted: rgba(0, 0, 0, 0.42);
+            --star-svg: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23aaa' d='M50 80C50 88 49 90 45 90C49 90 50 92 50 100C50 92 51 90 55 90C51 90 50 88 50 80Z'/%3E%3C/svg%3E");
+            --star-svg-sm: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23aaa' d='M50 88C50 92 49.5 93 48 93C49.5 93 50 94 50 98C50 94 50.5 93 52 93C50.5 93 50 92 50 88Z'/%3E%3C/svg%3E");
+        }
+        body.light-mode::before { opacity: 0.04; }
+        body.light-mode::after  { opacity: 0.02; }
+
+        /* Light: solid white cards, glass OFF, no borders */
+        body.light-mode .glass-card,
+        body.light-mode .sidebar,
+        body.light-mode .floating-window,
+        body.light-mode .settings-btn-container,
+        body.light-mode .portal-card,
+        body.light-mode .setting-card,
+        body.light-mode .theme-picker-card {
+            backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+            background: #ffffff !important;
+            border-color: transparent !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 8px 28px rgba(0,0,0,0.05) !important;
+        }
+        body.light-mode .nav-icon { color: rgba(0,0,0,0.4); }
+        body.light-mode .nav-icon.active { color: var(--accent-color); }
+        body.light-mode .icon-box { background: rgba(0,0,0,0.05); color: var(--accent-color); border-color: transparent; }
+        body.light-mode .slider { background-color: rgba(0,0,0,0.12); }
+        body.light-mode .slider:before { background-color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.18); }
+        body.light-mode .section-label { color: rgba(0,0,0,0.32); }
+        body.light-mode .dropdown-content { background: rgba(0,0,0,0.025); }
+        body.light-mode .experiment-item { border-bottom-color: rgba(0,0,0,0.05); }
+        body.light-mode .prev-tech-item { border-bottom-color: rgba(0,0,0,0.05); color: rgba(0,0,0,0.5); }
+        body.light-mode .post-text { color: rgba(0,0,0,0.82); }
+        body.light-mode .post-card { backdrop-filter: none !important; background: #ffffff !important; border-color: transparent !important; box-shadow: 0 2px 10px rgba(0,0,0,0.07) !important; }
+        body.light-mode .color-swatch[style*="#ffffff"] { border: 2px solid rgba(0,0,0,0.15) !important; }
+        body.light-mode .modal-glass-content { backdrop-filter: none !important; background: #f5f6fa !important; border-color: transparent !important; box-shadow: 0 8px 40px rgba(0,0,0,0.12) !important; }
+        body.light-mode .modal-square-title,
+        body.light-mode .modal-action-square,
+        body.light-mode .modal-close-square { background: rgba(0,0,0,0.05); border-color: transparent; color: #0d0d1a; }
+        body.light-mode .backdrop-trigger { background: rgba(0,0,0,0.05); border-color: transparent; color: var(--text-main); }
+        body.light-mode .backdrop-trigger-label { color: var(--text-main); }
+        body.light-mode .backdrop-dropdown { backdrop-filter: none !important; background: #f0f2f8; border-color: transparent; box-shadow: 0 8px 30px rgba(0,0,0,0.10); }
+        body.light-mode .backdrop-option-name { color: var(--text-main); }
+        body.light-mode .backdrop-option:hover { background: rgba(0,0,0,0.04); }
+        body.light-mode .driver-category { color: rgba(0,0,0,0.35); }
+        body.light-mode .driver-specs { color: rgba(0,0,0,0.42); }
+        body.light-mode .header-text h1 { color: #0d0d1a; }
+        body.light-mode footer { color: rgba(0,0,0,0.35); }
+        body.light-mode kbd { background: rgba(0,0,0,0.07) !important; border-color: transparent !important; color: #0d0d1a !important; }
+        body.light-mode .theme-radio { border-color: rgba(0,0,0,0.18); }
+        body.light-mode .component-card { background: #f8f9fc; border-color: transparent; }
+        body.light-mode .driver-item { background: #f8f9fc; border-color: transparent; }
+        body.light-mode .toast-banner { color: #fff; }
+        body.light-mode .glass-border, body.light-mode [style*="glass-border"] { border-color: transparent !important; }
+
+        /* ===== DARK THEME (solid, no glass, no borders) ===== */
+        body.dark-mode {
+            --bg-deep: #0d0d18;
+            --gradient-purple: rgba(106, 36, 227, 0.0);
+            --gradient-blue: rgba(26, 115, 232, 0.0);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --inner-card: rgba(255, 255, 255, 0.02);
+            --text-main: #e8e8f0;
+            --text-muted: rgba(232, 232, 240, 0.45);
+        }
+        body.dark-mode::before { opacity: 0 !important; }
+        body.dark-mode::after  { opacity: 0 !important; }
+
+        /* Dark: solid opaque cards, glass OFF, no borders */
+        body.dark-mode .glass-card,
+        body.dark-mode .sidebar,
+        body.dark-mode .floating-window,
+        body.dark-mode .settings-btn-container,
+        body.dark-mode .portal-card,
+        body.dark-mode .setting-card,
+        body.dark-mode .theme-picker-card {
+            backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+            background: #111116 !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+        body.dark-mode .post-card { backdrop-filter: none !important; background: #111116 !important; border-color: transparent !important; box-shadow: none !important; }
+        body.dark-mode .modal-glass-content { backdrop-filter: none !important; background: #111116 !important; border-color: transparent !important; }
+        body.dark-mode .modal-square-title,
+        body.dark-mode .modal-action-square,
+        body.dark-mode .modal-close-square { background: #1a1a22; border-color: transparent; }
+        body.dark-mode .backdrop-trigger { background: #1a1a22; border-color: transparent; }
+        body.dark-mode .backdrop-dropdown { backdrop-filter: none !important; background: #111116; border-color: transparent; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        body.dark-mode .dropdown-content { background: rgba(0,0,0,0.2); }
+        body.dark-mode .experiment-item { border-bottom-color: rgba(255,255,255,0.04); }
+        body.dark-mode .component-card { background: #18181f; border-color: transparent; }
+        body.dark-mode .driver-item { background: #18181f; border-color: transparent; }
+        body.dark-mode .icon-box { background: #1a1a22; border-color: transparent; }
+
+        /* disable-glass (legacy — kept for glass effect toggle in accessibility) */
         body.disable-glass .glass-card, 
         body.disable-glass .sidebar, 
         body.disable-glass .floating-window,
@@ -162,30 +339,82 @@
         body.disable-glass .asset-modal {
             backdrop-filter: blur(4px) !important;
             -webkit-backdrop-filter: blur(4px) !important;
-            background: rgba(0, 0, 0, 0.4) !important; /* Slightly darker to make the solid box pop */
+            background: rgba(0, 0, 0, 0.4) !important;
         }
-        body.disable-glass .modal-glass-content {  /* ADDED THIS */
+        body.disable-glass .modal-glass-content {
             backdrop-filter: none !important; 
             -webkit-backdrop-filter: none !important; 
             background: #121217 !important; 
             border-color: rgba(255,255,255,0.1) !important;
-        }
-        /* Tinted Glass */
-        body.tinted-glass .glass-card,
-        body.tinted-glass .sidebar,
-        body.tinted-glass .floating-window,
-        body.tinted-glass .settings-btn-container,
-        body.tinted-glass .portal-card,
-        body.tinted-glass .setting-card,
-        body.tinted-glass .modal-glass-content {
-            background: color-mix(in srgb, var(--accent-color) 6%, rgba(255,255,255,0.03)) !important;
-            border-color: color-mix(in srgb, var(--accent-color) 20%, rgba(255,255,255,0.08)) !important;
         }
 
         body.perf-mode { background-image: none !important; background-color: #000 !important; }
         body.perf-mode::before, body.perf-mode::after { display: none !important; }
         
         body.hide-labels .nav-icon span { display: none !important; }
+
+        /* ===== ZEN MODE ===== */
+        #zen-overlay {
+            position: fixed; inset: 0; z-index: 99990;
+            background: transparent;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.9s ease;
+        }
+        #zen-overlay.active { opacity: 1; pointer-events: all; }
+
+        /* Hide all UI when zen is active — only backdrop canvases/elements remain */
+        body.zen-active .sidebar-container,
+        body.zen-active main,
+        body.zen-active footer,
+        body.zen-active .toast-banner,
+        body.zen-active .asset-modal {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: opacity 0.7s ease !important;
+        }
+
+        #zen-logo-img {
+            width: 160px; height: 160px;
+            border-radius: 0;
+            object-fit: contain;
+            animation: zen-pulse 3.5s ease-in-out infinite;
+            image-rendering: -webkit-optimize-contrast;
+        }
+        @keyframes zen-pulse {
+            0%   { transform: scale(1);    filter: drop-shadow(0 0 0px transparent); opacity: 0.8; }
+            50%  { transform: scale(1.07); filter: drop-shadow(0 0 32px var(--accent-color)); opacity: 1; }
+            100% { transform: scale(1);    filter: drop-shadow(0 0 0px transparent); opacity: 0.8; }
+        }
+        #zen-hint {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            font-size: 0.75rem; color: rgba(255,255,255,0.25); letter-spacing: 2px;
+            text-transform: uppercase; animation: zen-hint-fade 5s ease-in-out forwards;
+        }
+        @keyframes zen-hint-fade { 0%{opacity:0} 20%{opacity:1} 70%{opacity:1} 100%{opacity:0} }
+
+        /* ===== CUSTOM CURSOR (FIGMA-STYLE) ===== */
+        body.custom-cursor-active,
+        body.custom-cursor-active * { cursor: none !important; }
+
+        #custom-cursor {
+            position: fixed; pointer-events: none; z-index: 99980;
+            display: none;
+            transform: translate(0, 0);
+            /* The hotspot is the top-left tip of the arrow — no centering offset needed */
+            will-change: transform;
+        }
+        body.custom-cursor-active #custom-cursor { display: block; }
+
+        #custom-cursor svg {
+            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.55));
+            transition: transform 0.1s ease;
+        }
+        /* Scale up slightly on clickable elements */
+        body.custom-cursor-active.cursor-hover  #custom-cursor svg { transform: scale(1.12); }
+        /* Press feedback */
+        body.custom-cursor-active.cursor-clicking #custom-cursor svg { transform: scale(0.9); }
+
         
         .setting-card.disabled { opacity: 0.4; pointer-events: none; filter: grayscale(1); }
 
@@ -216,7 +445,22 @@
 
         /* Hide CSS stars when enhanced space bg or circuit bg is on */
         body.space-bg::before, body.space-bg::after,
-        body.circuit-bg::before, body.circuit-bg::after { display: none; }
+        body.circuit-bg::before, body.circuit-bg::after,
+        body.color-bg::before, body.color-bg::after,
+        body.off-bg::before, body.off-bg::after { display: none; }
+
+        /* Off backdrop: plain solid body colour, no gradient, no canvas */
+        body.off-bg {
+            background-image: none !important;
+        }
+
+        /* Color backdrop: solid accent-tinted gradient, no canvas */
+        body.color-bg {
+            background-image:
+                radial-gradient(at 20% 20%, color-mix(in srgb, var(--accent-color) 35%, transparent) 0px, transparent 55%),
+                radial-gradient(at 80% 80%, color-mix(in srgb, var(--accent-color) 20%, transparent) 0px, transparent 55%),
+                radial-gradient(at 50% 50%, color-mix(in srgb, var(--accent-color) 10%, transparent) 0px, transparent 70%) !important;
+        }
 
 
 
@@ -725,11 +969,14 @@
         .post-images.count-3 .post-img:first-child { grid-column: 1 / -1; }
         .post-images.count-4 { grid-template-columns: 1fr 1fr; }
         .post-img {
-            width: 100%; aspect-ratio: 16/9;
-            object-fit: cover;
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
             border-radius: 10px;
             cursor: pointer;
             transition: opacity 0.2s;
+            background: rgba(0,0,0,0.12);
+            display: block;
         }
         .post-img:hover { opacity: 0.88; }
         .post-footer {
@@ -969,9 +1216,25 @@
     <div class="aurora aurora-1"></div>
     <div class="aurora aurora-2"></div>
 
+    <!-- Zen Mode overlay -->
+    <div id="zen-overlay">
+        <img id="zen-logo-img" src="" alt="DalgleishGX">
+        <div id="zen-hint">Press Z to exit</div>
+    </div>
+
+    <!-- Custom Cursor (Figma-style arrow) -->
+    <div id="custom-cursor">
+        <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Arrow body — white fill, dark stroke for contrast on any bg -->
+            <path d="M2 2L2 18.5L6.2 14.3L9.5 21.5L12 20.4L8.7 13.2L14.5 13.2L2 2Z"
+                  fill="white" stroke="#1a1a2e" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
     <audio id="sound-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
     <audio id="sound-switch" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
     <audio id="bg-music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" loop preload="auto"></audio>
+    <audio id="lofi-audio" preload="none"></audio>
 
     <div class="sidebar-container">
         <nav class="sidebar">
@@ -1068,7 +1331,7 @@
                 <div class="concept-preview"><img src="https://github.com/DalgleishGX/Website/blob/main/image(6).png?raw=true" alt="Google Discover Concept"></div>
                 <div class="concept-meta">
                     <h3>Google Discover Concept</h3>
-                    <p>A reimagined Google Discover feed focusing on a cleaner, more personalized user experience.</p>
+                    <p data-i18n="discover-desc">A reimagined Google Discover feed focusing on a cleaner, more personalized user experience.</p>
                     <div class="asset-actions"><div class="asset-btn btn-view" onclick="openAsset('https://github.com/DalgleishGX/Website/blob/main/image(6).png?raw=true', this)">View Asset</div></div>
                 </div>
             </div>
@@ -1258,16 +1521,99 @@
     </main>
 
     <main id="settings" class="page">
-        <section style="width: 100%; display: flex; flex-direction: column; gap: 20px;">
-            <span class="section-label">Customize</span>
+            <!-- Settings Hero Tile -->
+            <div class="glass-card" style="padding: 36px 40px; display: flex; align-items: center; gap: 32px; background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%); overflow: hidden; position: relative;">
+                <!-- Decorative blobs -->
+                <div style="position:absolute;top:-30px;right:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle, color-mix(in srgb, var(--accent-color) 18%, transparent) 0%, transparent 70%);pointer-events:none;"></div>
+                <div style="position:absolute;bottom:-40px;left:40%;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle, color-mix(in srgb, var(--accent-color) 10%, transparent) 0%, transparent 70%);pointer-events:none;"></div>
+                <!-- Icon cluster -->
+                <div style="display:flex;flex-direction:column;gap:10px;flex-shrink:0;">
+                    <div style="display:flex;gap:10px;">
+                        <div style="width:46px;height:46px;border-radius:14px;background:color-mix(in srgb,var(--accent-color) 15%,rgba(255,255,255,0.05));border:1px solid color-mix(in srgb,var(--accent-color) 25%,rgba(255,255,255,0.08));display:flex;align-items:center;justify-content:center;color:var(--accent-color);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                        </div>
+                        <div style="width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;color:var(--text-muted);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:10px;">
+                        <div style="width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;color:var(--text-muted);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        </div>
+                        <div style="width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;color:var(--text-muted);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <!-- Text -->
+                <div style="min-width:0;">
+                    <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:8px;">Your Space, Your Rules</h2>
+                    <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.6;max-width:340px;" data-i18n="settings-hero-desc">Customise your accent color, backdrop, animations, and more. Settings are saved locally and persist across visits.</p>
+                    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+                        <span style="font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:50px;background:color-mix(in srgb,var(--accent-color) 12%,transparent);border:1px solid color-mix(in srgb,var(--accent-color) 30%,transparent);color:var(--accent-color);">Display</span>
+                        <span style="font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:50px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);">Audio</span>
+                        <span style="font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:50px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);">Accessibility</span>
+                        <span style="font-size:0.72rem;font-weight:600;padding:4px 12px;border-radius:50px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--text-muted);">Experiments</span>
+                    </div>
+                </div>
+            </div>
+            <span class="section-label">Display</span>
             <div class="settings-list">
-                
+
+                <!-- Theme Picker: Glass / Light / Dark -->
+                <div class="theme-picker-card" id="theme-picker-card">
+                    <div class="theme-picker-info">
+                        <div class="icon-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                        </div>
+                        <div class="driver-content">
+                            <span class="driver-name">Theme</span>
+                            <span class="driver-specs">Choose your preferred visual style.</span>
+                        </div>
+                    </div>
+                    <div class="theme-options">
+                        <!-- Glass -->
+                        <div class="theme-option active" id="theme-opt-glass" onclick="setTheme('glass')">
+                            <div class="theme-preview glass-prev">
+                                <div class="theme-preview-inner">
+                                    <div class="prev-topbar"></div>
+                                    <div class="prev-card"></div>
+                                </div>
+                            </div>
+                            <span class="theme-label">Glass</span>
+                            <div class="theme-radio"><div class="theme-radio-dot"></div></div>
+                        </div>
+                        <!-- Light -->
+                        <div class="theme-option" id="theme-opt-light" onclick="setTheme('light')">
+                            <div class="theme-preview light-prev">
+                                <div class="theme-preview-inner">
+                                    <div class="prev-topbar"></div>
+                                    <div class="prev-card"></div>
+                                </div>
+                            </div>
+                            <span class="theme-label">Light</span>
+                            <div class="theme-radio"><div class="theme-radio-dot"></div></div>
+                        </div>
+                        <!-- Dark -->
+                        <div class="theme-option" id="theme-opt-dark" onclick="setTheme('dark')">
+                            <div class="theme-preview dark-prev">
+                                <div class="theme-preview-inner">
+                                    <div class="prev-topbar"></div>
+                                    <div class="prev-card"></div>
+                                </div>
+                            </div>
+                            <span class="theme-label">Dark</span>
+                            <div class="theme-radio"><div class="theme-radio-dot"></div></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="setting-card">
                     <div class="setting-info">
                         <div class="icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
                         <div class="driver-content">
-                            <span class="driver-name">Accent Color</span>
-                            <span class="driver-specs">Select your preferred highlight color.</span>
+                            <span class="driver-name" data-i18n="accent-color-name">Accent Color</span>
+                            <span class="driver-specs" data-i18n="accent-color-spec">Select your preferred highlight color.</span>
                         </div>
                     </div>
                     <div class="color-options">
@@ -1280,8 +1626,54 @@
                     </div>
                 </div>
 
-                <div class="setting-card" id="backdrop-card">
+                <!-- Language Setting -->
+                <div class="setting-card" id="language-card">
                     <div class="setting-info">
+                        <div class="icon-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </div>
+                        <div class="driver-content">
+                            <span class="driver-name">Language</span>
+                            <span class="driver-specs">Choose your preferred spelling variant.</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-left:20px;">
+                        <button id="lang-en-us" onclick="setLanguage('en-us')" style="padding:7px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--text-main);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.2s,border-color 0.2s;display:flex;align-items:center;gap:7px;">
+                            <svg width="18" height="12" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;border-radius:2px;overflow:hidden;">
+                                <rect width="18" height="12" fill="#B22234"/>
+                                <rect y="0.923" width="18" height="0.923" fill="white"/><rect y="2.769" width="18" height="0.923" fill="white"/><rect y="4.615" width="18" height="0.923" fill="white"/><rect y="6.461" width="18" height="0.923" fill="white"/><rect y="8.307" width="18" height="0.923" fill="white"/><rect y="10.153" width="18" height="0.923" fill="white"/>
+                                <rect width="7.2" height="6.461" fill="#3C3B6E"/>
+                                <g fill="white" font-size="1.4">
+                                    <text x="0.7" y="1.6">★</text><text x="2.1" y="1.6">★</text><text x="3.5" y="1.6">★</text><text x="4.9" y="1.6">★</text><text x="6.3" y="1.6">★</text>
+                                    <text x="1.4" y="2.9">★</text><text x="2.8" y="2.9">★</text><text x="4.2" y="2.9">★</text><text x="5.6" y="2.9">★</text>
+                                    <text x="0.7" y="4.2">★</text><text x="2.1" y="4.2">★</text><text x="3.5" y="4.2">★</text><text x="4.9" y="4.2">★</text><text x="6.3" y="4.2">★</text>
+                                    <text x="1.4" y="5.5">★</text><text x="2.8" y="5.5">★</text><text x="4.2" y="5.5">★</text><text x="5.6" y="5.5">★</text>
+                                </g>
+                            </svg>
+                            EN (US)
+                        </button>
+                        <button id="lang-en-gb" onclick="setLanguage('en-gb')" style="padding:7px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--text-main);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.2s,border-color 0.2s;display:flex;align-items:center;gap:7px;">
+                            <svg width="18" height="12" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;border-radius:2px;overflow:hidden;">
+                                <rect width="18" height="12" fill="#012169"/>
+                                <!-- White diagonals -->
+                                <line x1="0" y1="0" x2="18" y2="12" stroke="white" stroke-width="2.4"/>
+                                <line x1="18" y1="0" x2="0" y2="12" stroke="white" stroke-width="2.4"/>
+                                <!-- Red diagonals -->
+                                <line x1="0" y1="0" x2="18" y2="12" stroke="#C8102E" stroke-width="1.4"/>
+                                <line x1="18" y1="0" x2="0" y2="12" stroke="#C8102E" stroke-width="1.4"/>
+                                <!-- White cross -->
+                                <rect x="7.2" y="0" width="3.6" height="12" fill="white"/>
+                                <rect x="0" y="4.5" width="18" height="3" fill="white"/>
+                                <!-- Red cross -->
+                                <rect x="7.8" y="0" width="2.4" height="12" fill="#C8102E"/>
+                                <rect x="0" y="5.1" width="18" height="1.8" fill="#C8102E"/>
+                            </svg>
+                            EN (UK)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="setting-card" id="backdrop-card">                    <div class="setting-info">
                         <div class="icon-box">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
                         </div>
@@ -1315,6 +1707,22 @@
                                 </div>
                                 <svg class="backdrop-option-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                             </div>
+                            <div class="backdrop-option" id="bdopt-color" onclick="selectBackdrop('color')">
+                                <div class="backdrop-option-thumb"><canvas id="thumbColor" width="108" height="72"></canvas></div>
+                                <div class="backdrop-option-info">
+                                    <span class="backdrop-option-name">Color</span>
+                                    <span class="backdrop-option-desc">Solid accent gradient, no animation</span>
+                                </div>
+                                <svg class="backdrop-option-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="backdrop-option" id="bdopt-off" onclick="selectBackdrop('off')">
+                                <div class="backdrop-option-thumb"><canvas id="thumbOff" width="108" height="72"></canvas></div>
+                                <div class="backdrop-option-info">
+                                    <span class="backdrop-option-name">Off</span>
+                                    <span class="backdrop-option-desc">Plain solid background, no effects</span>
+                                </div>
+                                <svg class="backdrop-option-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1332,9 +1740,10 @@
                         <span class="slider"></span>
                     </label>
                 </div>
+            </div>
 
-
-
+            <span class="section-label">Audio</span>
+            <div class="settings-list">
                 <div class="setting-card" id="sound-card-ui">
                     <div class="setting-info">
                         <div class="icon-box">
@@ -1353,13 +1762,11 @@
                     </label>
                 </div>
 
-                <div class="setting-card">
+                <div class="setting-card" id="ambient-music-card">
                     <div class="setting-info">
                         <div class="icon-box">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 18V5l12-2v13"></path>
-                                <circle cx="6" cy="18" r="3"></circle>
-                                <circle cx="18" cy="16" r="3"></circle>
+                                <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
                             </svg>
                         </div>
                         <div class="driver-content">
@@ -1374,7 +1781,7 @@
                 </div>
             </div>
 
-            <span class="section-label" style="margin-top: 10px;">Accessibility</span>
+            <span class="section-label">Accessibility</span>
             <div class="settings-list">
                 <div class="setting-card">
                     <div class="setting-info">
@@ -1408,7 +1815,7 @@
                     <div class="setting-info">
                         <div class="icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg></div>
                         <div class="driver-content">
-                            <span class="driver-name">Glass Effects</span>
+                            <span class="driver-name">Glass Effect</span>
                             <span class="driver-specs">Background blur and translucency effects.</span>
                         </div>
                     </div>
@@ -1418,11 +1825,9 @@
                     </label>
                 </div>
 
-
-            </div>
             </div>
 
-            <span class="section-label" style="margin-top: 10px;">Experiments</span>
+            <span class="section-label">Advanced</span>
             <div class="glass-card dropdown-container" onclick="toggleDropdown(this)">
                 <div class="dropdown-header">
                     <div style="display: flex; align-items: center; gap: 18px;">
@@ -1455,44 +1860,79 @@
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <div class="experiment-item" id="tinted-glass-card" onclick="event.stopPropagation()">
+                        <div class="experiment-item" id="custom-cursor-card" onclick="event.stopPropagation()">
                             <div class="setting-info">
                                 <div class="icon-box">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-7 1-4 7z"/></svg>
                                 </div>
                                 <div class="driver-content">
-                                    <span class="driver-name">Tinted Glass</span>
-                                    <span class="driver-specs">Tint glass surfaces with your accent color.</span>
+                                    <span class="driver-name">Custom Cursor</span>
+                                    <span class="driver-specs">Replaces the default cursor with an accent-coloured dot and ring.</span>
                                 </div>
                             </div>
                             <label class="toggle-switch">
-                                <input type="checkbox" id="tinted-glass-toggle" onchange="toggleSetting('tinted-glass', this.checked)">
+                                <input type="checkbox" id="cursor-trail-toggle" onchange="toggleCursorTrail(this.checked)">
                                 <span class="slider"></span>
                             </label>
                         </div>
+                        <div class="experiment-item" id="lofi-radio-card" onclick="event.stopPropagation()">
+                            <div class="setting-info">
+                                <div class="icon-box">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                                </div>
+                                <div class="driver-content">
+                                    <span class="driver-name">Lofi Radio</span>
+                                    <span class="driver-specs" id="lofi-status-text">Chill background music — replaces Ambient Music.</span>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="lofi-toggle" onchange="toggleLofi(this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="experiment-item" id="zen-mode-card" onclick="event.stopPropagation()">
+                            <div class="setting-info">
+                                <div class="icon-box">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                </div>
+                                <div class="driver-content">
+                                    <span class="driver-name">Zen Mode</span>
+                                    <span class="driver-specs">Press <kbd style="background:rgba(255,255,255,0.1);padding:1px 6px;border-radius:5px;font-size:0.7rem;border:1px solid rgba(255,255,255,0.2)">Z</kbd> to enter focus view. Requires Lofi Radio.</span>
+                                </div>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="zen-mode-toggle" onchange="toggleZenModeSetting(this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+            <button onclick="resetAllSettings()" style="width:100%;padding:18px;background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:28px;color:rgba(255,120,120,0.9);font-size:0.9rem;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.2s,border-color 0.2s,color 0.2s;" onmouseover="this.style.background='rgba(255,60,60,0.18)';this.style.borderColor='rgba(255,80,80,0.5)';this.style.color='#ff6b6b'" onmouseout="this.style.background='rgba(255,60,60,0.08)';this.style.borderColor='rgba(255,60,60,0.2)';this.style.color='rgba(255,120,120,0.9)'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+                Reset All Settings &amp; Cookies
+            </button>
     </main>
 
     <main id="posts" class="page">
-        <section style="width:100%;display:flex;flex-direction:column;gap:20px;">
-            <span class="section-label">Posts</span>
+        <span class="section-label">Posts</span>
 
-            <!-- Loading state -->
-            <div id="posts-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:80px 0;color:var(--text-muted);">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite;opacity:0.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                <span style="font-size:0.9rem;">Loading posts…</span>
-            </div>
+        <!-- Loading state -->
+        <div id="posts-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:80px 0;color:var(--text-muted);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite;opacity:0.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            <span style="font-size:0.9rem;">Loading posts…</span>
+        </div>
 
-            <!-- Error state -->
-            <div id="posts-error" style="display:none;flex-direction:column;align-items:center;gap:14px;padding:80px 0;color:var(--text-muted);">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <span style="font-size:0.9rem;" id="posts-error-msg">Couldn't load posts.</span>
-            </div>
+        <!-- Error state -->
+        <div id="posts-error" style="display:none;flex-direction:column;align-items:center;gap:14px;padding:60px 0;color:var(--text-muted);">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span style="font-size:0.9rem;" id="posts-error-msg">Couldn't load posts.</span>
+            <pre id="posts-error-detail" style="font-size:0.72rem;color:rgba(255,120,120,0.8);background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:10px;padding:12px 16px;max-width:100%;overflow-x:auto;text-align:left;white-space:pre-wrap;word-break:break-all;margin:0;"></pre>
+            <button onclick="retryLoadPosts()" style="padding:9px 20px;background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);border-radius:50px;color:var(--text-muted);font-size:0.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background 0.2s,color 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)';this.style.color='var(--text-main)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='var(--text-muted)'">Try again</button>
+        </div>
 
-            <!-- Feed -->
-            <div id="posts-feed" style="display:none;flex-direction:column;gap:16px;"></div>
-        </section>
+        <!-- Feed -->
+        <div id="posts-feed" style="display:none;flex-direction:column;gap:16px;"></div>
     </main>
 
 
@@ -1531,7 +1971,7 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         window.addEventListener('DOMContentLoaded', () => {
-            const settings = ['perf-mode', 'disable-animations', 'disable-glass', 'enable-sounds', 'hide-labels', 'tinted-glass', 'space-bg', 'circuit-bg', 'posts-page'];
+            const settings = ['perf-mode', 'disable-animations', 'disable-glass', 'enable-sounds', 'hide-labels', 'space-bg', 'circuit-bg', 'posts-page', 'cursor-trail', 'zen-mode-enabled', 'lofi-radio'];
             const savedAccent = localStorage.getItem('accent-color') || '#1a73e8';
             document.documentElement.style.setProperty('--accent-color', savedAccent);
             
@@ -1565,10 +2005,13 @@
                         const toggle = document.getElementById('labels-toggle');
                         if (toggle) toggle.checked = !isActive;
                         if (isActive) document.body.classList.add(setting);
-                    } else if (setting === 'tinted-glass') {
-                        const toggle = document.getElementById('tinted-glass-toggle');
+                    } else if (setting === 'cursor-trail') {
+                        const toggle = document.getElementById('cursor-trail-toggle');
                         if (toggle) toggle.checked = isActive;
-                        if (isActive) document.body.classList.add(setting);
+                        if (isActive) initCursorTrail();
+                    } else if (setting === 'zen-mode-enabled') {
+                        const toggle = document.getElementById('zen-mode-toggle');
+                        if (toggle) toggle.checked = isActive;
                     } else if (setting === 'circuit-bg') {
                         if (isActive) {
                             document.body.classList.add('circuit-bg');
@@ -1577,7 +2020,9 @@
                     } else if (setting === 'space-bg') {
                         // Default ON if never set
                         const spaceVal = localStorage.getItem('space-bg');
-                        const spaceOn = spaceVal === null ? true : spaceVal === 'true';
+                        // Only apply space-bg if color-bg isn't the stored backdrop
+                        const activeBackdrop = localStorage.getItem('active-backdrop');
+                        const spaceOn = spaceVal === null ? (activeBackdrop !== 'color' && activeBackdrop !== 'circuit') : spaceVal === 'true';
                         if (spaceOn) {
                             localStorage.setItem('space-bg', 'true');
                             document.body.classList.add('space-bg');
@@ -1593,6 +2038,11 @@
                         const toggle = document.getElementById(toggleId);
                         if (toggle) toggle.checked = true;
                         if (setting !== 'enable-sounds') document.body.classList.add(setting);
+                        // If reduce-animations is on, grey out backdrop card
+                        if (setting === 'disable-animations') {
+                            const backdropCard = document.getElementById('backdrop-card');
+                            if (backdropCard) backdropCard.classList.add('disabled');
+                        }
                     }
                 });
             }
@@ -1613,6 +2063,33 @@
             // Init backdrop picker — must run after all bg settings are restored
             setTimeout(initBackdropPicker, 0);
 
+            // Init language
+            const savedLang = localStorage.getItem('site-language') || 'en-us';
+            applyLanguage(savedLang);
+
+            // Init theme (must run after backdrop is restored)
+            const savedTheme = localStorage.getItem('site-theme') || 'glass';
+            _applyTheme(savedTheme, true);
+
+            // Init lofi
+            const lofiActive = localStorage.getItem('lofi-radio') === 'true';
+            const lofiToggle = document.getElementById('lofi-toggle');
+            if (lofiToggle) lofiToggle.checked = lofiActive;
+
+            const ambientCard = document.getElementById('ambient-music-card');
+            const zenCard     = document.getElementById('zen-mode-card');
+
+            if (lofiActive) {
+                // Lock ambient, unlock zen
+                if (ambientCard) ambientCard.classList.add('disabled');
+                if (zenCard) zenCard.classList.remove('disabled');
+                _lofiIndex = parseInt(localStorage.getItem('lofi-track-index') || '0');
+                loadLofiTrack(_lofiIndex, false);
+            } else {
+                // Lofi off: zen must be greyed out
+                if (zenCard) zenCard.classList.add('disabled');
+            }
+
         });
         function playSound(type = 'click') {
             if (window.innerWidth <= 768) return; 
@@ -1625,8 +2102,61 @@
             }
         }
 
+        /* ===== THEME SYSTEM ===== */
+        function setTheme(theme) {
+            playSound('switch');
+            localStorage.setItem('site-theme', theme);
+            _applyTheme(theme, false);
+        }
+
+        function _applyTheme(theme, skipBackdrop) {
+            const body = document.body;
+            const glassToggle = document.getElementById('glass-toggle');
+            const activeBackdrop = localStorage.getItem('active-backdrop') || 'space';
+
+            // Strip all theme classes
+            body.classList.remove('light-mode', 'dark-mode', 'glass-theme');
+
+            if (theme === 'glass') {
+                body.classList.add('glass-theme');
+                body.classList.remove('disable-glass');
+                localStorage.setItem('disable-glass', 'false');
+                if (glassToggle) glassToggle.checked = true;
+                if (!skipBackdrop && activeBackdrop === 'off') selectBackdrop('space');
+            } else if (theme === 'light') {
+                body.classList.add('light-mode');
+                body.classList.remove('disable-glass');
+                localStorage.setItem('disable-glass', 'false');
+                if (glassToggle) glassToggle.checked = true;
+                if (!skipBackdrop && (activeBackdrop === 'color' || activeBackdrop === 'off')) selectBackdrop('off');
+            } else if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                body.classList.remove('disable-glass');
+                localStorage.setItem('disable-glass', 'false');
+                if (glassToggle) glassToggle.checked = true;
+                if (!skipBackdrop && (activeBackdrop === 'color' || activeBackdrop === 'off')) selectBackdrop('off');
+            }
+
+            // Update picker UI
+            ['glass','light','dark'].forEach(t => {
+                const el = document.getElementById('theme-opt-' + t);
+                if (el) el.classList.toggle('active', t === theme);
+            });
+        }
+
+        function toggleLightMode(enabled) {
+            // Legacy shim
+            setTheme(enabled ? 'light' : 'glass');
+        }
+
         function toggleMusic(play) {
             playSound('switch');
+            // Block ambient music entirely while Lofi Radio is on
+            if (play && localStorage.getItem('lofi-radio') === 'true') {
+                const toggle = document.getElementById('music-toggle');
+                if (toggle) toggle.checked = false;
+                return;
+            }
             const music = document.getElementById('bg-music');
             if (!music) return;
             if (play) {
@@ -1650,7 +2180,8 @@
                 '#e91e63': 'https://github.com/DalgleishGX/Website/blob/main/Red.png?raw=true',
                 '#00c853': 'https://github.com/DalgleishGX/Website/blob/main/Green.png?raw=true',
                 '#ff9100': 'https://github.com/DalgleishGX/Website/blob/main/Orange.png?raw=true',
-                '#ffffff': 'https://github.com/DalgleishGX/Website/blob/main/White.png?raw=true'
+                '#ffffff': 'https://github.com/DalgleishGX/Website/blob/main/White.png?raw=true',
+                '#777777': 'https://github.com/DalgleishGX/Website/blob/main/White.png?raw=true'
             };
             if (favicon && colorMap[color]) {
                 favicon.href = colorMap[color];
@@ -1700,19 +2231,28 @@
 
         function toggleSetting(className, shouldAdd) {
             playSound('switch');
+            const backdropCard = document.getElementById('backdrop-card');
+            const noClassNames = ['enable-sounds', 'cursor-trail', 'zen-mode-enabled', 'lofi-radio'];
             if(shouldAdd) {
-                if (className !== 'enable-sounds') document.body.classList.add(className);
+                if (!noClassNames.includes(className)) document.body.classList.add(className);
                 localStorage.setItem(className, 'true');
-                // Reduce motion: stop the canvas if space-bg is on
-                if (className === 'disable-animations' && document.body.classList.contains('space-bg')) {
-                    stopSpaceCanvas();
+                if (className === 'disable-animations') {
+                    // Save current backdrop and switch to color
+                    const curBackdrop = localStorage.getItem('active-backdrop') || 'space';
+                    if (curBackdrop !== 'color') localStorage.setItem('pre-anim-backdrop', curBackdrop);
+                    _switchToColorBackdrop();
+                    if (backdropCard) backdropCard.classList.add('disabled');
                 }
             } else {
-                if (className !== 'enable-sounds') document.body.classList.remove(className);
+                if (!noClassNames.includes(className)) document.body.classList.remove(className);
                 localStorage.setItem(className, 'false');
-                // Restore canvas if space-bg is still on
-                if (className === 'disable-animations' && document.body.classList.contains('space-bg') && !spaceAnimFrame) {
-                    startSpaceCanvas();
+                if (className === 'disable-animations') {
+                    // Restore previous backdrop (if perf mode is not on)
+                    if (backdropCard) backdropCard.classList.remove('disabled');
+                    if (localStorage.getItem('perf-mode') !== 'true') {
+                        const prev = localStorage.getItem('pre-anim-backdrop') || 'space';
+                        selectBackdrop(prev);
+                    }
                 }
             }
         }
@@ -2070,6 +2610,30 @@
         }
 
         let _postsFetched = false;
+        let _allPostData  = [];
+        let _renderedCount = 0;
+        let _postsObserver = null;
+        const POSTS_BATCH = 5;
+
+        function renderNextBatch() {
+            const feed     = document.getElementById('posts-feed');
+            const sentinel = document.getElementById('posts-sentinel');
+            const batch    = _allPostData.slice(_renderedCount, _renderedCount + POSTS_BATCH);
+            batch.forEach(data => feed.insertBefore(buildPostCard(data), sentinel));
+            _renderedCount += batch.length;
+            if (_renderedCount >= _allPostData.length) {
+                sentinel.style.display = 'none';
+                if (_postsObserver) { _postsObserver.disconnect(); _postsObserver = null; }
+            }
+        }
+
+        function retryLoadPosts() {
+            _postsFetched  = false;
+            _allPostData   = [];
+            _renderedCount = 0;
+            if (_postsObserver) { _postsObserver.disconnect(); _postsObserver = null; }
+            loadPosts();
+        }
 
         function loadPosts() {
             if (_postsFetched) return;
@@ -2084,29 +2648,70 @@
             feed.style.display    = 'none';
 
             fetch(POSTS_PROXY)
-                .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+                .then(r => {
+                    if (!r.ok) throw new Error(`HTTP ${r.status} ${r.statusText}`);
+                    return r.json();
+                })
                 .then(json => {
                     const parser = new DOMParser();
-                    const xml = parser.parseFromString(json.contents, 'text/xml');
+                    const xml    = parser.parseFromString(json.contents, 'text/xml');
+
+                    const parseErr = xml.querySelector('parsererror');
+                    if (parseErr) throw new Error('XML parse error: ' + parseErr.textContent.slice(0, 300));
+
                     const items = [...xml.querySelectorAll('item')];
+                    if (!items.length) throw new Error('Feed returned 0 items — source may be empty or rate-limited');
 
-                    if (!items.length) throw new Error('No posts found');
+                    _allPostData = items
+                        .map(item => extractPostData(item))
+                        .filter(d => d.text || d.imgs.length);
 
+                    if (!_allPostData.length) throw new Error('All items filtered out (no text or images in any entry)');
+
+                    // Build feed with sentinel for infinite scroll
                     feed.innerHTML = '';
-                    items.forEach(item => {
-                        const data = extractPostData(item);
-                        if (!data.text && !data.imgs.length) return;
-                        feed.appendChild(buildPostCard(data));
-                    });
+                    const sentinel = document.createElement('div');
+                    sentinel.id = 'posts-sentinel';
+                    sentinel.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 0;color:var(--text-muted);';
+                    sentinel.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:spin 1s linear infinite;opacity:0.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                        <span style="font-size:0.8rem;">Loading more…</span>
+                    `;
+                    feed.appendChild(sentinel);
+
+                    renderNextBatch();
 
                     loading.style.display = 'none';
                     feed.style.display    = 'flex';
+
+                    if (_renderedCount < _allPostData.length) {
+                        _postsObserver = new IntersectionObserver(entries => {
+                            if (entries[0].isIntersecting) renderNextBatch();
+                        }, { rootMargin: '300px' });
+                        _postsObserver.observe(sentinel);
+                    }
                 })
                 .catch(err => {
                     console.error('Posts load error:', err);
                     loading.style.display = 'none';
-                    document.getElementById('posts-error-msg').textContent =
-                        'Couldn\'t load posts. The feed may be temporarily unavailable.';
+
+                    const msg = err.message || String(err);
+                    let friendly;
+                    if (err.name === 'TypeError' || msg.includes('Failed to fetch')) {
+                        friendly = 'Network error — couldn\'t reach the feed proxy.';
+                    } else if (/^HTTP \d{3}/.test(msg)) {
+                        friendly = `Feed proxy returned an error (${msg}).`;
+                    } else if (msg.includes('XML parse')) {
+                        friendly = 'Feed response couldn\'t be parsed as valid XML.';
+                    } else if (msg.includes('0 items') || msg.includes('filtered out')) {
+                        friendly = 'Feed loaded but contained no displayable posts.';
+                    } else {
+                        friendly = 'Couldn\'t load posts. See details below.';
+                    }
+
+                    document.getElementById('posts-error-msg').textContent = friendly;
+                    document.getElementById('posts-error-detail').textContent =
+                        `Error:  ${err.name}: ${msg}\nProxy:  ${POSTS_PROXY}\nFeed:   ${POSTS_RSS}\nTime:   ${new Date().toISOString()}`;
                     error.style.display = 'flex';
                 });
         }
@@ -2385,13 +2990,54 @@
                 return ((t ^ t >>> 14) >>> 0) / 4294967296; };
         }
 
+        function drawColorThumb(canvasId) {
+            const c = document.getElementById(canvasId);
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width, h = c.height;
+            const [r, g, b] = getAccentRgb();
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#05050a'; ctx.fillRect(0, 0, w, h);
+            const g1 = ctx.createRadialGradient(w*0.25, h*0.25, 0, w*0.25, h*0.25, w*0.65);
+            g1.addColorStop(0, `rgba(${r},${g},${b},0.5)`); g1.addColorStop(1, 'transparent');
+            ctx.fillStyle = g1; ctx.fillRect(0, 0, w, h);
+            const g2 = ctx.createRadialGradient(w*0.78, h*0.75, 0, w*0.78, h*0.75, w*0.5);
+            g2.addColorStop(0, `rgba(${r},${g},${b},0.3)`); g2.addColorStop(1, 'transparent');
+            ctx.fillStyle = g2; ctx.fillRect(0, 0, w, h);
+        }
+
+        function drawOffThumb(canvasId) {
+            const c = document.getElementById(canvasId);
+            if (!c) return;
+            const ctx = c.getContext('2d');
+            const w = c.width, h = c.height;
+            const isLight = document.body.classList.contains('light-mode');
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = isLight ? '#f0f2f8' : '#0d0d18';
+            ctx.fillRect(0, 0, w, h);
+            // Subtle horizontal lines to suggest "plain / nothing"
+            ctx.strokeStyle = isLight ? 'rgba(0,0,0,0.10)' : 'rgba(255,255,255,0.07)';
+            ctx.lineWidth = 1;
+            const rng = mulberry32(99);
+            for (let i = 1; i < 4; i++) {
+                ctx.beginPath();
+                ctx.moveTo(w * 0.14, h * (i / 4));
+                ctx.lineTo(w * (0.38 + rng() * 0.32), h * (i / 4));
+                ctx.stroke();
+            }
+        }
+
         function renderBackdropThumbs() {
             drawSpaceThumb('thumbSpace');
             drawCircuitThumb('thumbCircuit');
+            drawColorThumb('thumbColor');
+            drawOffThumb('thumbOff');
             // Active thumb mirrors whichever is selected
             const active = localStorage.getItem('active-backdrop') || 'space';
             if (active === 'space') drawSpaceThumb('thumbActive');
-            else drawCircuitThumb('thumbActive');
+            else if (active === 'circuit') drawCircuitThumb('thumbActive');
+            else if (active === 'off') drawOffThumb('thumbActive');
+            else drawColorThumb('thumbActive');
         }
 
         // Move the dropdown to <body> on first call so it escapes all stacking contexts
@@ -2444,21 +3090,28 @@
             if (prev === type) { const dd=document.getElementById('backdropDropdown'); if(dd) dd.classList.remove('open'); const ch=document.querySelector('.backdrop-trigger-chevron'); if(ch) ch.classList.remove('rotated'); return; }
             localStorage.setItem('active-backdrop', type);
 
-            // Swap backgrounds
+            // Stop all canvases and remove all bg classes first
+            stopSpaceCanvas();
+            stopCircuitCanvas();
+            document.body.classList.remove('space-bg', 'circuit-bg', 'color-bg', 'off-bg');
+            localStorage.setItem('space-bg', 'false');
+            localStorage.setItem('circuit-bg', 'false');
+            localStorage.setItem('color-bg', 'false');
+
             if (type === 'space') {
-                stopCircuitCanvas();
-                document.body.classList.remove('circuit-bg');
-                localStorage.setItem('circuit-bg', 'false');
                 document.body.classList.add('space-bg');
                 localStorage.setItem('space-bg', 'true');
                 if (!spaceAnimFrame) startSpaceCanvas();
-            } else {
-                stopSpaceCanvas();
-                document.body.classList.remove('space-bg');
-                localStorage.setItem('space-bg', 'false');
+            } else if (type === 'circuit') {
                 document.body.classList.add('circuit-bg');
                 localStorage.setItem('circuit-bg', 'true');
                 if (!circuitAnimFrame) startCircuitCanvas();
+            } else if (type === 'color') {
+                document.body.classList.add('color-bg');
+                localStorage.setItem('color-bg', 'true');
+            } else if (type === 'off') {
+                // Off — plain solid body bg, no canvas, no gradient
+                document.body.classList.add('off-bg');
             }
 
             updateBackdropUI(type);
@@ -2466,32 +3119,53 @@
         }
 
         function updateBackdropUI(type) {
-            // Update trigger label
             const label = document.getElementById('backdropTriggerLabel');
-            if (label) label.textContent = type === 'space' ? 'Space' : 'Circuit';
-            // Update active thumb
+            const names = { space: 'Space', circuit: 'Circuit', color: 'Color', off: 'Off' };
+            if (label) label.textContent = names[type] || type;
             if (type === 'space') drawSpaceThumb('thumbActive');
-            else drawCircuitThumb('thumbActive');
-            // Selected state on options
+            else if (type === 'circuit') drawCircuitThumb('thumbActive');
+            else if (type === 'off') drawOffThumb('thumbActive');
+            else drawColorThumb('thumbActive');
             document.querySelectorAll('.backdrop-option').forEach(el => el.classList.remove('selected'));
             const sel = document.getElementById('bdopt-' + type);
             if (sel) sel.classList.add('selected');
         }
 
         function initBackdropPicker() {
-            // Determine active backdrop — if space-bg was just defaulted on, treat as 'space'
             const stored = localStorage.getItem('active-backdrop');
             let active = stored;
             if (!active) {
-                // Infer from which bg class is currently on body
                 if (document.body.classList.contains('circuit-bg')) active = 'circuit';
+                else if (document.body.classList.contains('color-bg')) active = 'color';
                 else active = 'space';
                 localStorage.setItem('active-backdrop', active);
+            }
+            if (active === 'color' && !document.body.classList.contains('color-bg')) {
+                document.body.classList.remove('space-bg', 'circuit-bg');
+                stopSpaceCanvas(); stopCircuitCanvas();
+                document.body.classList.add('color-bg');
+            }
+            if (active === 'off' && !document.body.classList.contains('off-bg')) {
+                document.body.classList.remove('space-bg', 'circuit-bg', 'color-bg');
+                stopSpaceCanvas(); stopCircuitCanvas();
+                document.body.classList.add('off-bg');
             }
             renderBackdropThumbs();
             updateBackdropUI(active);
         }
         /* ===== END BACKDROP PICKER ===== */
+
+        function _switchToColorBackdrop() {
+            stopSpaceCanvas();
+            stopCircuitCanvas();
+            document.body.classList.remove('space-bg', 'circuit-bg');
+            document.body.classList.add('color-bg');
+            localStorage.setItem('space-bg', 'false');
+            localStorage.setItem('circuit-bg', 'false');
+            localStorage.setItem('color-bg', 'true');
+            localStorage.setItem('active-backdrop', 'color');
+            updateBackdropUI('color');
+        }
 
         function togglePerformance(isActive) {
             playSound('switch');
@@ -2499,6 +3173,7 @@
             const glassToggle = document.getElementById('glass-toggle');
             const animCard = document.getElementById('anim-card');
             const glassCard = document.getElementById('glass-card');
+            const backdropCard = document.getElementById('backdrop-card');
 
             if(isActive) {
                 document.body.classList.add('perf-mode', 'disable-animations', 'disable-glass');
@@ -2506,30 +3181,27 @@
                 glassToggle.checked = false; 
                 animCard.classList.add('disabled');
                 glassCard.classList.add('disabled');
+                if (backdropCard) backdropCard.classList.add('disabled');
                 localStorage.setItem('perf-mode', 'true');
                 localStorage.setItem('disable-animations', 'true');
                 localStorage.setItem('disable-glass', 'true');
-                stopSpaceCanvas();
-                stopCircuitCanvas();
-                const circuitToggle = document.getElementById('circuit-bg-toggle');
-                const circuitBgCard = document.getElementById('circuit-bg-card');
-                if (circuitToggle) circuitToggle.checked = false;
-                if (circuitBgCard) circuitBgCard.classList.add('disabled');
-                const spaceToggle = document.getElementById('space-bg-toggle');
-                const spaceBgCard = document.getElementById('space-bg-card');
-                if (spaceToggle) spaceToggle.checked = false;
-                if (spaceBgCard) spaceBgCard.classList.add('disabled');
+                // Save current backdrop and switch to color
+                const curBackdrop = localStorage.getItem('active-backdrop') || 'space';
+                if (curBackdrop !== 'color') localStorage.setItem('pre-perf-backdrop', curBackdrop);
+                _switchToColorBackdrop();
             } else {
                 document.body.classList.remove('perf-mode', 'disable-animations', 'disable-glass');
                 animToggle.checked = false;
                 glassToggle.checked = true; 
                 animCard.classList.remove('disabled');
                 glassCard.classList.remove('disabled');
+                if (backdropCard) backdropCard.classList.remove('disabled');
                 localStorage.setItem('perf-mode', 'false');
                 localStorage.setItem('disable-animations', 'false');
                 localStorage.setItem('disable-glass', 'false');
-                const spaceBgCard = document.getElementById('space-bg-card');
-                if (spaceBgCard) spaceBgCard.classList.remove('disabled');
+                // Restore previous backdrop
+                const prev = localStorage.getItem('pre-perf-backdrop') || 'space';
+                selectBackdrop(prev);
             }
         }
 
@@ -2580,6 +3252,236 @@
             const modal = document.getElementById('assetModal');
             if (modal) modal.classList.remove('active');
             document.body.style.overflow = '';
+        }
+
+        function resetAllSettings() {
+            // Clear all localStorage
+            localStorage.clear();
+            // Clear all cookies
+            document.cookie.split(';').forEach(c => {
+                document.cookie = c.trim().split('=')[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/';
+            });
+            // Reload to simulate first boot
+            location.reload();
+        }
+
+        /* ===== ZEN MODE ===== */
+        let _zenActive = false;
+
+        // Map accent color → favicon PNG URL (same as updateFavicon)
+        const _zenFaviconMap = {
+            '#1a73e8': 'https://github.com/DalgleishGX/Website/blob/main/Blue.png?raw=true',
+            '#6a24e3': 'https://github.com/DalgleishGX/Website/blob/main/Purple.png?raw=true',
+            '#e91e63': 'https://github.com/DalgleishGX/Website/blob/main/Red.png?raw=true',
+            '#00c853': 'https://github.com/DalgleishGX/Website/blob/main/Green.png?raw=true',
+            '#ff9100': 'https://github.com/DalgleishGX/Website/blob/main/Orange.png?raw=true',
+            '#ffffff': 'https://github.com/DalgleishGX/Website/blob/main/White.png?raw=true',
+            '#777777': 'https://github.com/DalgleishGX/Website/blob/main/White.png?raw=true'
+        };
+
+        function getZenLogoUrl() {
+            const isSpace = document.body.classList.contains('space-bg');
+            if (isSpace) {
+                return 'https://github.com/DalgleishGX/Website/blob/main/White.png?raw=true';
+            }
+            const accent = (localStorage.getItem('accent-color') || '#1a73e8').toLowerCase();
+            return _zenFaviconMap[accent] || 'https://github.com/DalgleishGX/Website/blob/main/White.png?raw=true';
+        }
+
+        function enterZen() {
+            _zenActive = true;
+            // Set logo to correct favicon PNG
+            const logoImg = document.getElementById('zen-logo-img');
+            if (logoImg) logoImg.src = getZenLogoUrl();
+            // Show overlay, hide all UI
+            const overlay = document.getElementById('zen-overlay');
+            overlay.classList.add('active');
+            document.body.classList.add('zen-active');
+            // Resume lofi (it must already be enabled to enter zen)
+            const lofiAudio = document.getElementById('lofi-audio');
+            if (lofiAudio && lofiAudio.paused && _lofiPlaying) {
+                lofiAudio.play().catch(() => {});
+            }
+            // Re-trigger hint animation
+            const hint = document.getElementById('zen-hint');
+            if (hint) { hint.style.animation = 'none'; void hint.offsetWidth; hint.style.animation = ''; }
+        }
+
+        function exitZen() {
+            _zenActive = false;
+            document.body.classList.remove('zen-active');
+            const overlay = document.getElementById('zen-overlay');
+            overlay.classList.remove('active');
+            // Pause lofi on exit (it stays toggled on — just pauses for zen exit)
+            // Actually: leave lofi playing since the toggle is still on, just leave it
+        }
+
+        function toggleZenModeSetting(enabled) {
+            playSound('switch');
+            localStorage.setItem('zen-mode-enabled', enabled ? 'true' : 'false');
+            if (!enabled && _zenActive) exitZen();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.key === 'z' || e.key === 'Z') {
+                if (localStorage.getItem('zen-mode-enabled') !== 'true') return;
+                if (_zenActive) exitZen(); else enterZen();
+            }
+        });
+
+        document.getElementById('zen-overlay').addEventListener('click', () => { if (_zenActive) exitZen(); });
+
+        /* ===== CUSTOM CURSOR (FIGMA-STYLE ARROW) ===== */
+        let _cursorTrailActive = false;
+        let _cursorMoveHandler = null, _cursorDownHandler = null, _cursorUpHandler = null;
+
+        function initCursorTrail() {
+            if (_cursorTrailActive) return;
+            _cursorTrailActive = true;
+            document.body.classList.add('custom-cursor-active');
+
+            const el = document.getElementById('custom-cursor');
+
+            _cursorMoveHandler = (e) => {
+                // Position with top-left at the hotspot (tip of arrow)
+                el.style.left = e.clientX + 'px';
+                el.style.top  = e.clientY + 'px';
+
+                // Hover detection for scale feedback
+                const target = document.elementFromPoint(e.clientX, e.clientY);
+                const isHoverable = target && target.closest('a,button,[onclick],.nav-icon,.color-swatch,.backdrop-option,.toggle-switch,.portal-card,.floating-window,.setting-card,.asset-btn,.dropdown-container');
+                document.body.classList.toggle('cursor-hover', !!isHoverable);
+            };
+
+            _cursorDownHandler = () => document.body.classList.add('cursor-clicking');
+            _cursorUpHandler   = () => document.body.classList.remove('cursor-clicking');
+
+            document.addEventListener('mousemove', _cursorMoveHandler);
+            document.addEventListener('mousedown', _cursorDownHandler);
+            document.addEventListener('mouseup',   _cursorUpHandler);
+        }
+
+        function destroyCursorTrail() {
+            if (!_cursorTrailActive) return;
+            _cursorTrailActive = false;
+            document.body.classList.remove('custom-cursor-active', 'cursor-hover', 'cursor-clicking');
+            if (_cursorMoveHandler) document.removeEventListener('mousemove', _cursorMoveHandler);
+            if (_cursorDownHandler) document.removeEventListener('mousedown', _cursorDownHandler);
+            if (_cursorUpHandler)   document.removeEventListener('mouseup',   _cursorUpHandler);
+            _cursorMoveHandler = _cursorDownHandler = _cursorUpHandler = null;
+        }
+
+        function toggleCursorTrail(enabled) {
+            playSound('switch');
+            localStorage.setItem('cursor-trail', enabled ? 'true' : 'false');
+            if (enabled) initCursorTrail(); else destroyCursorTrail();
+        }
+
+        /* ===== LANGUAGE / i18n ===== */
+        const _i18n = {
+            'en-us': {
+                'accent-color-name':    'Accent Color',
+                'accent-color-spec':    'Select your preferred highlight color.',
+                'settings-hero-desc':   'Customize your accent color, backdrop, animations, and more. Settings are saved locally and persist across visits.',
+                'discover-desc':        'A reimagined Google Discover feed focusing on a cleaner, more personalized user experience.',
+            },
+            'en-gb': {
+                'accent-color-name':    'Accent Colour',
+                'accent-color-spec':    'Select your preferred highlight colour.',
+                'settings-hero-desc':   'Customise your accent colour, backdrop, animations, and more. Settings are saved locally and persist across visits.',
+                'discover-desc':        'A reimagined Google Discover feed focusing on a cleaner, more personalised user experience.',
+            }
+        };
+
+        function applyLanguage(lang) {
+            const strings = _i18n[lang] || _i18n['en-us'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (strings[key]) el.textContent = strings[key];
+            });
+            // Update button active states
+            const usBtn = document.getElementById('lang-en-us');
+            const gbBtn = document.getElementById('lang-en-gb');
+            const activeStyle = 'color:var(--accent-color);border-color:var(--accent-color);background:color-mix(in srgb,var(--accent-color) 12%,transparent);';
+            const inactiveStyle = 'color:var(--text-main);border-color:rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);';
+            if (usBtn) usBtn.style.cssText += lang === 'en-us' ? activeStyle : inactiveStyle;
+            if (gbBtn) gbBtn.style.cssText += lang === 'en-gb' ? activeStyle : inactiveStyle;
+        }
+
+        function setLanguage(lang) {
+            playSound('switch');
+            localStorage.setItem('site-language', lang);
+            applyLanguage(lang);
+        }
+
+        /* ===== LOFI RADIO ===== */
+        const _lofiTracks = [
+            // Internet Archive — chill-lofi-music-relax-study collection (CC licensed, direct stream)
+            { url: 'https://archive.org/download/chill-lofi-music-relax-study/Jhove%20x%20fourwalls%20-%20Golden%20Hour.mp3',      name: 'Golden Hour' },
+            { url: 'https://archive.org/download/chill-lofi-music-relax-study/Chris%20Mazuera%20-%20Dozing.mp3',                   name: 'Dozing' },
+            { url: 'https://archive.org/download/chill-lofi-music-relax-study/Casiio%20-%20Far%20Off.mp3',                         name: 'Far Off' },
+            { url: 'https://archive.org/download/chill-lofi-music-relax-study/Hevi%20x%20Kainbeats%20-%20Drifting%20Away.mp3',     name: 'Drifting Away' },
+            { url: 'https://archive.org/download/chill-lofi-music-relax-study/DLJ%20-%20Night%20Emotions.mp3',                     name: 'Night Emotions' },
+            { url: 'https://archive.org/download/chill-lofi-music-relax-study/Glimlip%20x%20Louk%20-%20Can%20We%20Talk.mp3',       name: 'Can We Talk' },
+        ];
+        let _lofiIndex = 0;
+        let _lofiPlaying = false;
+
+        function loadLofiTrack(index, autoplay) {
+            const audio = document.getElementById('lofi-audio');
+            if (!audio) return;
+            _lofiIndex = ((index % _lofiTracks.length) + _lofiTracks.length) % _lofiTracks.length;
+            localStorage.setItem('lofi-track-index', _lofiIndex);
+            audio.src = _lofiTracks[_lofiIndex].url;
+            audio.volume = 0.12;
+            updateLofiStatus();
+            if (autoplay) {
+                audio.play().catch(() => {});
+            }
+        }
+
+        function updateLofiStatus() {
+            const el = document.getElementById('lofi-status-text');
+            if (!el) return;
+            el.textContent = _lofiPlaying
+                ? `Now playing: ${_lofiTracks[_lofiIndex].name}`
+                : 'Chill background music — replaces Ambient Music.';
+        }
+
+        function toggleLofi(enabled) {
+            playSound('switch');
+            localStorage.setItem('lofi-radio', enabled ? 'true' : 'false');
+            const audio     = document.getElementById('lofi-audio');
+            const bgMusic   = document.getElementById('bg-music');
+            const musicToggle  = document.getElementById('music-toggle');
+            const ambientCard  = document.getElementById('ambient-music-card');
+            const zenCard      = document.getElementById('zen-mode-card');
+
+            if (enabled) {
+                _lofiPlaying = true;
+                // Hard-stop ambient music and lock its card
+                if (bgMusic) { bgMusic.pause(); localStorage.setItem('ambient-music', 'false'); }
+                if (musicToggle) musicToggle.checked = false;
+                if (ambientCard) ambientCard.classList.add('disabled');
+                // Unlock zen mode
+                if (zenCard) zenCard.classList.remove('disabled');
+                // Wire auto-advance
+                if (audio) audio.onended = () => { _lofiIndex++; loadLofiTrack(_lofiIndex, true); };
+                loadLofiTrack(_lofiIndex, true);
+            } else {
+                _lofiPlaying = false;
+                if (audio) { audio.pause(); audio.onended = null; }
+                // Unlock ambient music card
+                if (ambientCard) ambientCard.classList.remove('disabled');
+                // Grey out and disable zen mode — exit zen if currently active
+                if (zenCard) zenCard.classList.add('disabled');
+                if (_zenActive) exitZen();
+                const zenToggle = document.getElementById('zen-mode-toggle');
+                if (zenToggle) zenToggle.checked = false;
+                localStorage.setItem('zen-mode-enabled', 'false');
+                updateLofiStatus();
+            }
         }
     </script>
 </body>
